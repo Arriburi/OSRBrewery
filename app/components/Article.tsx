@@ -1,40 +1,42 @@
-import Image from "next/image";
-import Link from "next/link";
+import { BaseArticle } from "../types/data";
+import { KeyValue } from "../types/data";
 
-interface ArticleProp {
-  title: string;
-  text: string;
-  tags: string[];
-  imgSrc: string;
-  linkHref: string;
+interface ArticleProps {
+  article: BaseArticle;
 }
 
-export default function Article({ title, text, tags, imgSrc, linkHref }: ArticleProp) {
+function createPropertyDiv(property: KeyValue) {
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-row items-center">
-        <Link href={linkHref}>
-          <div className="relative w-[250px] h-[200px]">
-            <Image
-              src={imgSrc}
-              alt={title}
-              layout="fill"
-              className="shadow-[4px_4px_0px_rgba(0,0,0,1)] object-cover"
-            />
-          </div>
-        </Link>
-        <div className="flex flex-col pl-5">
-          <div className="font-bold text-4xl">{title}</div>
-          <div className="text-base mt-4">
-            {tags.map((tag, index) => (
-              <span key={index} className="mr-2 px-3 py-1 rounded bg-gray-900 text-white">#{tag}</span> // Display each tag with a space or separator
-            ))}
-          </div>
+    <div>
+      <b>{property.key}: </b>{property.value}
+    </div>
+  );
+}
+
+
+export default function Article({ article }: ArticleProps) {
+  return (
+    <div className="container mx-auto px-4">
+      <div className="flex justify-between items-end">
+        <div>
+          <h1 className="text-4xl pb-2 font-bold text-gray-800">{article.title} </h1>
+          <span className="px-3 py-1 rounded bg-gray-900 text-white">#{article.type}</span>
+        </div>
+        <div className="text-right text-sm text-gray-600">
+          <p>By {article.author}</p>
+          <p>Published on {article.date.toISOString()}</p>
         </div>
       </div>
-      <div className="py-8">
-        <p>{text}</p>
+      <div className="divide-y divide-gray-200 pt-10">
+        <h2 className="text-lg text-gray-800">Humanoid</h2>
+        {article.properties?.map((p: KeyValue) => createPropertyDiv(p))}
+
+      </div>
+      <div className="prose max-w-none pt-10 pb-8">
+        <p>
+          {article.text}
+        </p>
       </div>
     </div>
   );
-};
+}

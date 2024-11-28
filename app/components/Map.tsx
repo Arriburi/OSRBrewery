@@ -1,15 +1,21 @@
 import Image from "next/image"
 
-export default function DefaultPost() {
+export default function Map() {
   return (
-    <div className="w-full md:w-3/4 px-4">
-      <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">The Isle of Dread</h1>
-        <p>By Arriburi</p>
-        <p>Published on April 4, 2023</p>
+    <div className="px-w-full px-4">
+      <div className="flex justify-between items-end">
+        <div>
+          <h1 className="text-4xl pb-2 font-bold text-gray-800">Isle of Dread</h1>
+          <span className="px-3 mr-3 py-1 rounded bg-gray-900 text-white">#Map</span>
+          <span className="px-3 mr-3 py-1 rounded bg-gray-900 text-white">#AD&D</span>
+        </div>
+        <div className="text-right text-sm text-gray-600">
+          <p>By Arriburi</p>
+          <p>Published on January 1, 1999</p>
+        </div>
       </div>
-      <Image src="/isle.png" width={600} height={600} alt="Blog Featured Image" className="mb-8" />
-      <div className="prose max-w-none pb-8">
+      <Image src="/isle.png" width={600} height={600} alt="Blog Featured Image" className="m-8" />
+      <div className="prose max-w-none pt-2 pb-8">
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed sit amet feugiat
           eros, eget eleifend dolor. Proin maximus bibendum felis, id fermentum odio vestibulum id. Sed ac
           ligula eget dolor consequat tincidunt. Nullam fringilla ipsum et ex lacinia, at bibendum elit

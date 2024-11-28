@@ -1,10 +1,28 @@
+'use client'
+
 import Link from "next/link";
 import Image from "next/image";
 import Boxlist from "../components/Boxlist";
+import Article from "../components/Article";
+import { useEffect, useState } from "react";
+import { getArticleById } from "../helpers/backend";
+import { BaseArticle } from "../types/data";
 
-import SpellPost from "../components/Spell";
+const id = "bibi";
+
 
 export default function Post() {
+
+  const [article, setArticle] = useState<BaseArticle | null>(null)
+
+  useEffect(() => {
+    setArticle(getArticleById(id));
+  }, [])
+
+  if (article == null) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="bg-inherit text-black mx-auto max-w-screen-lg px-4">
       <div className="flex flex-col justify-between">
@@ -37,11 +55,10 @@ export default function Post() {
           </nav>
         </header>
         <main>
-          {/* Adjust the layout to include two columns */}
           <div className=" flex flex-row">
             <div className="flex-1 bg-white mr-4 py-8">
               <div className="container mx-auto px-4">
-                <SpellPost />
+                <Article article={article} />
               </div>
             </div>
             <div className="w-[200px]">

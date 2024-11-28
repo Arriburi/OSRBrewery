@@ -1,11 +1,24 @@
+
+
 import Link from "next/link";
 import Image from "next/image";
-import Boxlist from "../components/Boxlist";
+import Boxlist from "../../components/Boxlist";
+import Article from "../../components/Article";
+import { getArticleById } from "../../helpers/backend";
 
 
-import InputForm from "../components/InputForm";
 
-export default function Post() {
+export default async function ArticleDisplay({ params }: { params: Promise<{ slug: string }> }) {
+
+
+  const id = (await params).slug;
+
+  const article = getArticleById(id);
+
+  if (article == null) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="bg-inherit text-black mx-auto max-w-screen-lg px-4">
       <div className="flex flex-col justify-between">
@@ -37,11 +50,11 @@ export default function Post() {
             </Link>
           </nav>
         </header>
-        <main className="px-4">
+        <main>
           <div className=" flex flex-row">
             <div className="flex-1 bg-white mr-4 py-8">
               <div className="container mx-auto px-4">
-                <InputForm />
+                <Article article={article} />
               </div>
             </div>
             <div className="w-[200px]">
