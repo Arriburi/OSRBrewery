@@ -31,7 +31,7 @@ export default function ArticleForm() {
     formState: { errors },
   } = useForm<Inputs>()
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log("Form data:", data);
 
   const inputType = watch("type");
   const typeKeys = getKeysByType(inputType)
@@ -73,14 +73,24 @@ export default function ArticleForm() {
         {/* UPLOAD INPUT */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Upload File (Image or PDF)</label>
-          <input
-            accept=".jpg,.jpeg,.png,.pdf"
-            className="w-full bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none file:py-2 file:px-4 file:rounded-md file:border-none file:bg-blue-600 file:text-white file:cursor-pointer"
-            type="file" {...register("imgSrc")} />
+          <Controller
+            control={control}
+            name="imgSrc"
+            render={({ field: { onChange } }) => (
+              <input
+                type="file"
+                accept=".jpg,.jpeg,.png,.pdf"
+                className="w-full bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none file:py-2 file:px-4 file:rounded-md file:border-none file:bg-blue-600 file:text-white file:cursor-pointer"
+                onChange={(e) => {
+                  onChange(e.target.files ? e.target.files[0] : null);
+                }}
+              />
+            )}
+          />
         </div>
 
-        {/* TAGS INPUT */}
 
+        {/* TAGS INPUT */}
         <Controller
           control={control}
           name="tags"
