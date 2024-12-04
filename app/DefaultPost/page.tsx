@@ -54,7 +54,7 @@ export default function Post() {
             </Link>
           </nav>
         </header>
-        <main>
+        <main className="">
           <div className=" flex flex-row">
             <div className="flex-1 bg-white mr-4 py-8">
               <div className="container mx-auto px-4">

@@ -4,6 +4,7 @@ import Boxlist from "../components/Boxlist";
 
 
 import InputForm from "../components/InputForm";
+import ArticleForm from "../components/ArticleForm";
 
 export default function Post() {
   return (
@@ -41,7 +42,7 @@ export default function Post() {
           <div className=" flex flex-row">
             <div className="flex-1 bg-white mr-4 py-8">
               <div className="container mx-auto px-4">
-                <InputForm />
+                <ArticleForm />
               </div>
             </div>
             <div className="w-[200px]">

@@ -15,7 +15,6 @@ export default function Boxlist() {
           </li>
         </ul>
       </div>
-
     </div>
   )
 };
