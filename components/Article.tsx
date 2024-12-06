@@ -1,8 +1,12 @@
+'use client'
+
 import { BaseArticle } from "../types/data";
 import { KeyValue } from "../types/data";
+import { useState, useEffect } from "react";
+import { getArticleById } from "../helpers/backend";
 
 interface ArticleProps {
-  article: BaseArticle;
+  id: string;
 }
 
 function createPropertyDiv(property: KeyValue) {
@@ -14,7 +18,18 @@ function createPropertyDiv(property: KeyValue) {
 }
 
 
-export default function Article({ article }: ArticleProps) {
+export default function Article({ id }: ArticleProps) {
+
+  const [article, setArticle] = useState<BaseArticle | null>(null)
+
+  useEffect(() => {
+    setArticle(getArticleById(id));
+  }, [])
+
+  if (article == null) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="container mx-auto px-4">
       <div className="flex justify-between items-end">

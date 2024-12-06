@@ -1,14 +1,16 @@
+'use client'
+
+import { useEffect, useState } from "react";
+import { BaseArticle } from "@/types/data";
+import { getArticles } from "@/helpers/backend";
 import Image from "next/image";
 import Link from "next/link";
-import { BaseArticle } from "../types/data";
 
-interface HomeArticleProp {
+interface HomeArticleProps {
   article: BaseArticle;
 }
 
-
-
-export default function HomeArticle({ article }: HomeArticleProp) {
+function ArticleCard({ article }: HomeArticleProps) {
   return (
     <div className="flex flex-col">
       <div className="flex flex-row items-center">
@@ -36,4 +38,24 @@ export default function HomeArticle({ article }: HomeArticleProp) {
       </div>
     </div>
   );
-};
+}
+
+export default function HomeArticle() {
+  const [articles, setArticles] = useState<BaseArticle[]>([]);
+
+  useEffect(() => {
+    setArticles(getArticles());
+  }, []);
+
+  if (!articles.length) {
+    return <div>Loading articles...</div>;
+  }
+
+  return (
+    <div>
+      {articles.map((article, id) => (
+        <ArticleCard key={id} article={article} />
+      ))}
+    </div>
+  );
+}

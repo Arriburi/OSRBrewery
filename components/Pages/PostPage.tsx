@@ -1,24 +1,12 @@
-
-
 import Link from "next/link";
 import Image from "next/image";
-import Boxlist from "../../../components/Boxlist";
-import Article from "../../../components/Article";
-import { getArticleById } from "../../../helpers/backend";
+import Boxlist from "../../components/Boxlist";
+import Article from "../../components/Article";
 
 
+const id = "bibi"
 
-export default async function ArticleDisplay({ params }: { params: Promise<{ slug: string }> }) {
-
-
-  const id = (await params).slug;
-
-  const article = getArticleById(id);
-
-  if (article == null) {
-    return <div>Loading...</div>
-  }
-
+export default function PostPage() {
   return (
     <div className="bg-inherit text-black mx-auto max-w-screen-lg px-4">
       <div className="flex flex-col justify-between">
@@ -50,11 +38,11 @@ export default async function ArticleDisplay({ params }: { params: Promise<{ slu
             </Link>
           </nav>
         </header>
-        <main>
+        <main className="">
           <div className=" flex flex-row">
             <div className="flex-1 bg-white mr-4 py-8">
               <div className="container mx-auto px-4">
-                <Article article={article} />
+                <Article id={id} />
               </div>
             </div>
             <div className="w-[200px]">
