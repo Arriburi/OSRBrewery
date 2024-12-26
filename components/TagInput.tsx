@@ -33,6 +33,7 @@ export default function TagInput({ value = [], onChange }: TagInputProps) {
           className="flex-grow px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
         <button
+          type="button" //important otherwise it does onSubmit
           onClick={() => {
             addTag(tag);
           }} className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md text-white font-medium"
@@ -43,6 +44,7 @@ export default function TagInput({ value = [], onChange }: TagInputProps) {
           <div key={index} className="bg-blue-700 text-white mb-2 mr-1 px-3 py-1 rounded-full text-sm flex items-center space-x-2">
             <span>{tag}</span>
             <button onClick={() => removeTag(tag)} className="ml-1 text-red-400 hover:text-red-600"
+              type="button"
             >x</button>
           </div>))}
       </div>

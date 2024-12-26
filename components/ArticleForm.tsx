@@ -2,7 +2,7 @@
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { SpellKeys, MonsterKeys } from '../types/data';
 import TagInput from "./TagInput";
-
+import { useEffect } from "react";
 
 type Inputs = {
   title: string;
@@ -26,6 +26,7 @@ export default function ArticleForm() {
   const {
     control,
     register,
+    unregister,
     handleSubmit,
     watch,
   } = useForm<Inputs>()
@@ -34,11 +35,18 @@ export default function ArticleForm() {
   const inputType = watch("type");
   const typeKeys = getKeysByType(inputType)
 
+  useEffect(() => {
+    // You can unregister `properties` completely when type changes
+    unregister("properties");
+  }, [inputType, unregister]); // Only re-run when inputType changes
+
   return (
     <div className="bg-gray-800 text-white p-6 rounded-lg shadow-md w-full">
       <form onSubmit={handleSubmit(onSubmit)}>
+        {/*TYPE ARTICLE*/}
         <label className="block text-sm font-medium mb-1">Type of Article</label>
-        <select className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" {...register("type")}>
+        <select className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          {...register("type")}>
           <option value="Default">Default</option>
           <option value="Spell">Spell</option>
           <option value="Monster">Monster</option>
@@ -51,7 +59,8 @@ export default function ArticleForm() {
           {typeKeys.map((key, index) => (
             <div className="mb-4" key={index}>
               <label className="block text-sm font-medium mb-1">{key}</label>
-              <input className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" {...register(`properties.${index}`)} />
+              <input className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                {...register(`properties.${index}`)} />
             </div>
           ))}
         </div>
