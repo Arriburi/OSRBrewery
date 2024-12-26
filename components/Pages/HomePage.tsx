@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import HomeArticle from "../HomeArticle";
+import { Suspense } from "react";
 
 export default function HomePage() {
 
@@ -28,8 +29,10 @@ export default function HomePage() {
           </nav>
         </header>
         <main>
-          <div className="flex flex-col pb-0 py-3">popular brewed content</div>
-          <HomeArticle />
+          <h1 className="flex flex-col text-3xl pb-10 font-extrabold py-3">Popular brewed content</h1>
+          <Suspense fallback={<div>Loading...</div>}>
+            <HomeArticle />
+          </Suspense>
         </main>
         <footer className="flex justify-center mb-2 space-x-2 text-sm text-black">
           <div>Arrighetti Luca • </div>

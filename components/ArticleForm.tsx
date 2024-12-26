@@ -28,10 +28,8 @@ export default function ArticleForm() {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
   } = useForm<Inputs>()
-
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log("Form data:", data);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => console.log("Form data:", data);
 
   const inputType = watch("type");
   const typeKeys = getKeysByType(inputType)
@@ -88,8 +86,6 @@ export default function ArticleForm() {
             )}
           />
         </div>
-
-
         {/* TAGS INPUT */}
         <Controller
           control={control}

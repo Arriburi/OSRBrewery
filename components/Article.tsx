@@ -1,13 +1,17 @@
-'use client'
-
-import { BaseArticle } from "../types/data";
 import { KeyValue } from "../types/data";
-import { useState, useEffect } from "react";
-import { getArticleById } from "../helpers/backend";
 
 interface ArticleProps {
-  id: string;
+  id: number;
 }
+
+const fetchArticleById = async (id: number) => {
+  const response = await fetch(`http://localhost:3000/api/entries?id=${id}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch article");
+  }
+  return response.json(); // returns one article object
+};
+
 
 function createPropertyDiv(property: KeyValue) {
   return (
@@ -18,13 +22,9 @@ function createPropertyDiv(property: KeyValue) {
 }
 
 
-export default function Article({ id }: ArticleProps) {
+export default async function Article({ id }: ArticleProps) {
 
-  const [article, setArticle] = useState<BaseArticle | null>(null)
-
-  useEffect(() => {
-    setArticle(getArticleById(id));
-  }, [])
+  const article = await fetchArticleById(id);
 
   if (article == null) {
     return <div>Loading...</div>

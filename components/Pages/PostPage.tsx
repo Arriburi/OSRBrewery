@@ -4,7 +4,7 @@ import Boxlist from "../../components/Boxlist";
 import Article from "../../components/Article";
 
 
-const id = "bibi"
+const id = 2
 
 export default function PostPage() {
   return (
