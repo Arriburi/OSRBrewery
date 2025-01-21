@@ -25,11 +25,11 @@ INSERT INTO entries (title, text, tags, type, imgSrc, date, author, properties) 
   '{"damage": "8d6", "area": "20ft radius", "effects": "explosion"}'
 ),
 (
-  "Monster Manual Entry: Goblin",
-  "Details about Goblins, their behavior, and combat tactics.",
-  '["monster", "goblin", "dnd"]',
+  "Monster Manual Entry: Kobold",
+  "Details about Kobold, their behavior, and combat tactics.",
+  '["monster", "dnd"]',
   "Monster",
-  "goblin.jpg",
+  "kobold.jpg",
   "2023-12-22T10:00:00.000Z",
   "Admin",
   '{"frequency": "Common", "size": "Small", "alignment": "Neutral Evil"}'

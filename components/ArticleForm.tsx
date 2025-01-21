@@ -30,15 +30,38 @@ export default function ArticleForm() {
     handleSubmit,
     watch,
   } = useForm<Inputs>()
-  const onSubmit: SubmitHandler<Inputs> = async (data) => console.log("Form data:", data);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => { // console.log("Form data:", data);
+    try {
+      if (data.properties) {
+        data.properties = data.properties.filter(Boolean); // Remove empty strings
+      }
+
+      // POST reqest
+      const response = await fetch("/api/entries", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Entry saved successfully:", result);
+      } else {
+        console.error("Failed to save entry:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
 
   const inputType = watch("type");
   const typeKeys = getKeysByType(inputType)
 
   useEffect(() => {
-    // You can unregister `properties` completely when type changes
     unregister("properties");
-  }, [inputType, unregister]); // Only re-run when inputType changes
+  }, [inputType, unregister]);
 
   return (
     <div className="bg-gray-800 text-white p-6 rounded-lg shadow-md w-full">

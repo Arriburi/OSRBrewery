@@ -27,9 +27,45 @@ export async function GET() {
       properties: JSON.parse(entry.properties || "{}"),
     }));
 
-    return NextResponse.json(articles); // Send JSON response
+    return NextResponse.json(articles);
   } catch (error) {
     console.error("Error fetching articles:", error);
     return NextResponse.json({ error: "Failed to fetch articles" }, { status: 500 });
   }
 }
+
+//POST
+export async function POST(request: Request) {
+  try {
+    const db = await openDB();
+    const body = await request.json(); //this JSON
+
+    const defaultAuthor = "Anonymous";
+    const {
+      title,
+      text,
+      tags = [],
+      type,
+      imgSrc = null,
+      properties = {},
+      date = new Date()
+    } = body;
+
+    const result = await db.run(
+      "INSERT INTO entries (title, text, tags, type, imgSrc, date, author, properties) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      title,
+      text,
+      JSON.stringify(tags),
+      type,
+      imgSrc,
+      new Date().toISOString(),
+      defaultAuthor,
+      JSON.stringify(properties)
+    );
+    return NextResponse.json({ success: true, id: result.lastID });
+  } catch (error) {
+    console.error("Error saving entry:", error);
+    return NextResponse.json({ error: "Failed to save entry" }, { status: 500 });
+  }
+}
+
