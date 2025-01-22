@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
+import fs from "fs";
+import path from "path";
 
 async function openDB() {
   return open({
@@ -38,34 +40,54 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const db = await openDB();
-    const body = await request.json(); //this JSON
+    const formData = await request.formData(); //this JSON
+
+    console.log("The body:", formData);
 
     const defaultAuthor = "Anonymous";
-    const {
-      title,
-      text,
-      tags = [],
-      type,
-      imgSrc = null,
-      properties = {},
-      date = new Date()
-    } = body;
 
-    const result = await db.run(
+    const image = formData.get("imgSrc") as File;
+    const title = formData.get("title");
+    const text = formData.get("text");
+    const tags = formData.get("tags");
+    const type = formData.get("type");
+    const properties = formData.get("properties");
+
+    const date = new Date();
+
+
+    console.log(title);
+    console.log(text);
+    console.log(tags);
+    console.log(type);
+    console.log(properties);
+
+
+    const tempPath = image.name;
+    const publicPath = path.join(process.cwd(), "public", "upload");
+    const finalPath = path.join(publicPath, tempPath);
+
+
+    const buffer = Buffer.from(await image.arrayBuffer());
+    fs.writeFileSync(finalPath, buffer);
+
+    await db.run(
       "INSERT INTO entries (title, text, tags, type, imgSrc, date, author, properties) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       title,
       text,
-      JSON.stringify(tags),
+      tags,
       type,
-      imgSrc,
+      image.name,
       new Date().toISOString(),
       defaultAuthor,
-      JSON.stringify(properties)
+      properties
     );
-    return NextResponse.json({ success: true, id: result.lastID });
+
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error saving entry:", error);
     return NextResponse.json({ error: "Failed to save entry" }, { status: 500 });
   }
+
 }
 

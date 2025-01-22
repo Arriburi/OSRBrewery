@@ -10,7 +10,7 @@ type Inputs = {
   tags: string[];
   type: string;
   properties?: string[];
-  imgSrc?: string;
+  imgSrc?: FileList;
 };
 
 function getKeysByType(inputType: string): string[] {
@@ -31,6 +31,22 @@ export default function ArticleForm() {
     watch,
   } = useForm<Inputs>()
   const onSubmit: SubmitHandler<Inputs> = async (data) => { // console.log("Form data:", data);
+
+    const formData = new FormData();
+
+    formData.append("title", data.title);
+    formData.append("text", data.text);
+    formData.append("tags", JSON.stringify(data.tags));
+    formData.append("type", data.type);
+    formData.append("properties", JSON.stringify(data.properties));
+
+    console.log(data.properties)
+
+    if (data.imgSrc?.[0]) {
+      formData.append("imgSrc", data.imgSrc[0])
+    }
+
+
     try {
       if (data.properties) {
         data.properties = data.properties.filter(Boolean); // Remove empty strings
@@ -39,15 +55,13 @@ export default function ArticleForm() {
       // POST reqest
       const response = await fetch("/api/entries", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        body: formData,
       });
 
       if (response.ok) {
         const result = await response.json();
         console.log("Entry saved successfully:", result);
+        console.log("Form data:", data);
       } else {
         console.error("Failed to save entry:", await response.text());
       }
@@ -55,6 +69,7 @@ export default function ArticleForm() {
       console.error("Error submitting form:", error);
     }
   };
+
 
   const inputType = watch("type");
   const typeKeys = getKeysByType(inputType)
@@ -97,26 +112,18 @@ export default function ArticleForm() {
         {/* TEXT/DESCRIPTION */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea placeholder="Insert description" rows={6} className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none" {...register("text")} />
+          <textarea placeholder="Insert description" rows={6} className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+            {...register("text")} />
         </div>
 
         {/* UPLOAD INPUT */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Upload File (Image or PDF)</label>
-          <Controller
-            control={control}
-            name="imgSrc"
-            render={({ field: { onChange } }) => (
-              <input
-                type="file"
-                accept=".jpg,.jpeg,.png,.pdf"
-                className="w-full bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none file:py-2 file:px-4 file:rounded-md file:border-none file:bg-blue-600 file:text-white file:cursor-pointer"
-                onChange={(e) => {
-                  onChange(e.target.files ? e.target.files[0] : null);
-                }}
-              />
-            )}
-          />
+          <input
+            type="file"
+            accept=".jpg,.jpeg,.png,.pdf"
+            className="w-full bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none file:py-2 file:px-4 file:rounded-md file:border-none file:bg-blue-600 file:text-white file:cursor-pointer"
+            {...register("imgSrc")} />
         </div>
         {/* TAGS INPUT */}
         <Controller

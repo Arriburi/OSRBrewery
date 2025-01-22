@@ -25,7 +25,7 @@ function ArticleCard({ article }: HomeArticleProps) {
         <Link href={`/${article.title}`}>
           <div className="relative w-[250px] h-[200px]">
             <Image
-              src={"/" + article.imgSrc || "/spell.svg"}
+              src={"/upload/" + article.imgSrc || "/spell.svg"}
               alt={article.title || "Article image"}
               layout="fill"
               className="shadow-[4px_4px_0px_rgba(0,0,0,1)] object-cover"
