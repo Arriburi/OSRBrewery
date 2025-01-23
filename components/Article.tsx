@@ -9,7 +9,7 @@ const fetchArticleById = async (id: number) => {
   if (!response.ok) {
     throw new Error("Failed to fetch article");
   }
-  return response.json(); // returns one article object
+  return response.json();
 };
 
 
@@ -25,6 +25,7 @@ function createPropertyDiv(property: KeyValue) {
 export default async function Article({ id }: ArticleProps) {
 
   const article = await fetchArticleById(id);
+  console.log("ACI", article);
 
   if (article == null) {
     return <div>Loading...</div>
@@ -39,13 +40,12 @@ export default async function Article({ id }: ArticleProps) {
         </div>
         <div className="text-right text-sm text-gray-600">
           <p>By {article.author}</p>
-          <p>Published on {article.date.toISOString()}</p>
+          <p>Published on {article.date}</p>
         </div>
       </div>
       <div className="divide-y divide-gray-200 pt-10">
         <h2 className="text-lg text-gray-800">Humanoid</h2>
         {article.properties?.map((p: KeyValue) => createPropertyDiv(p))}
-
       </div>
       <div className="prose max-w-none pt-10 pb-8">
         <p>

@@ -11,28 +11,49 @@ async function openDB() {
   });
 }
 
-// GET
-export async function GET() {
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const id = url.searchParams.get("id");
+
   try {
     const db = await openDB();
-    const entries = await db.all("SELECT * FROM entries");
 
-    const articles = entries.map((entry) => ({
-      id: entry.id.toString(),
-      title: entry.title,
-      text: entry.text,
-      tags: JSON.parse(entry.tags || "[]"),
-      type: entry.type,
-      imgSrc: entry.imgSrc || null,
-      date: new Date(entry.date),
-      author: entry.author,
-      properties: JSON.parse(entry.properties || "{}"),
-    }));
+    if (id) {
+      const entry = await db.get("SELECT * FROM entries WHERE id = ?", id);
 
-    return NextResponse.json(articles);
+      const article = {
+        id: entry.id.toString(),
+        title: entry.title,
+        text: entry.text,
+        tags: JSON.parse(entry.tags || "[]"),
+        type: entry.type,
+        imgSrc: entry.imgSrc || null,
+        date: new Date(entry.date),
+        author: entry.author,
+        properties: JSON.parse(entry.properties || "{}"),
+      };
+
+      return NextResponse.json(article);
+    } else {
+      const entries = await db.all("SELECT * FROM entries");
+
+      const articles = entries.map((entry) => ({
+        id: entry.id.toString(),
+        title: entry.title,
+        text: entry.text,
+        tags: JSON.parse(entry.tags || "[]"),
+        type: entry.type,
+        imgSrc: entry.imgSrc || null,
+        date: new Date(entry.date),
+        author: entry.author,
+        properties: JSON.parse(entry.properties || "{}"),
+      }));
+
+      return NextResponse.json(articles);
+    }
   } catch (error) {
     console.error("Error fetching articles:", error);
-    return NextResponse.json({ error: "Failed to fetch articles" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to fetch articles" });
   }
 }
 
@@ -52,15 +73,6 @@ export async function POST(request: Request) {
     const tags = formData.get("tags");
     const type = formData.get("type");
     const properties = formData.get("properties");
-
-    const date = new Date();
-
-
-    console.log(title);
-    console.log(text);
-    console.log(tags);
-    console.log(type);
-    console.log(properties);
 
 
     const tempPath = image.name;

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Boxlist from "../../components/Boxlist";
 import ArticleForm from "../../components/ArticleForm";
+import Navbar from "../Navbar";
 
 export default function UploadPage() {
   return (
@@ -20,20 +21,7 @@ export default function UploadPage() {
               OSRBrewery
             </div>
           </Link>
-          <nav className="flex font-bold items-center space-x-6 text-base leading-5">
-            <Link href="" className="hover:underline">
-              Home
-            </Link>
-            <Link href="#" className="hover:underline">
-              Profile
-            </Link>
-            <Link href="/upload" className="hover:underline">
-              Upload
-            </Link>
-            <Link href="#" className="hover:underline">
-              About
-            </Link>
-          </nav>
+          <Navbar />
         </header>
         <main className="px-4">
           <div className=" flex flex-row">

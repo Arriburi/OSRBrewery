@@ -1,23 +1,14 @@
-
-
 import Link from "next/link";
 import Image from "next/image";
 import Boxlist from "../../../components/Boxlist";
 import Article from "../../../components/Article";
-import { getArticleById } from "../../../helpers/backend";
+import Navbar from "@/components/Navbar";
 
+export default async function ArticleDisplay({ params }: { params: { article: number } }
+) {
 
-
-export default async function ArticleDisplay({ params }: { params: Promise<{ slug: string }> }) {
-
-
-  const id = (await params).slug;
-
-  const article = getArticleById(id);
-
-  if (article == null) {
-    return <div>Loading...</div>
-  }
+  const id = (await params).article;
+  console.log("THE ID OF THIS IS", id);
 
   return (
     <div className="bg-inherit text-black mx-auto max-w-screen-lg px-4">
@@ -35,26 +26,13 @@ export default async function ArticleDisplay({ params }: { params: Promise<{ slu
               OSRBrewery
             </div>
           </Link>
-          <nav className="flex font-bold items-center space-x-6 text-base leading-5">
-            <Link href="" className="hover:underline">
-              Home
-            </Link>
-            <Link href="#" className="hover:underline">
-              Profile
-            </Link>
-            <Link href="/upload" className="hover:underline">
-              Upload
-            </Link>
-            <Link href="#" className="hover:underline">
-              About
-            </Link>
-          </nav>
+          <Navbar />
         </header>
         <main>
           <div className=" flex flex-row">
             <div className="flex-1 bg-white mr-4 py-8">
               <div className="container mx-auto px-4">
-                <Article article={article} />
+                <Article id={id} />
               </div>
             </div>
             <div className="w-[200px]">

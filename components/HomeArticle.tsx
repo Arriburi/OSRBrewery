@@ -17,7 +17,6 @@ const fetchAllArticles = async (): Promise<BaseArticle[]> => {
 };
 
 
-
 function ArticleCard({ article }: HomeArticleProps) {
   return (
     <div className="flex flex-col">

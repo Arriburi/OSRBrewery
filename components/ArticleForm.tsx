@@ -108,14 +108,12 @@ export default function ArticleForm() {
           <input placeholder="Insert title" className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             {...register("title")} />
         </div>
-
         {/* TEXT/DESCRIPTION */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea placeholder="Insert description" rows={6} className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
             {...register("text")} />
         </div>
-
         {/* UPLOAD INPUT */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Upload File (Image or PDF)</label>
@@ -136,8 +134,7 @@ export default function ArticleForm() {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white font-medium focus:ring-2 focus:ring-blue-400"
-          >
+            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white font-medium focus:ring-2 focus:ring-blue-400">
             Post
           </button>
         </div>

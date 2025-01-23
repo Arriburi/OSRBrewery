@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import HomeArticle from "../HomeArticle";
 import { Suspense } from "react";
+import Navbar from "../Navbar";
 
 export default function HomePage() {
 
@@ -21,12 +22,7 @@ export default function HomePage() {
               OSRBrewery
             </div>
           </Link>
-          <nav className="flex font-bold items-center space-x-6 text-base leading-5">
-            <Link href="" className="hover:underline">Home</Link>
-            <Link href="/profile" className="hover:underline">Profile</Link>
-            <Link href="/upload" className="hover:underline">Upload</Link>
-            <Link href="/about" className="hover:underline">About</Link>
-          </nav>
+          <Navbar />
         </header>
         <main>
           <h1 className="flex flex-col text-3xl pb-10 font-extrabold py-3">Popular brewed content</h1>

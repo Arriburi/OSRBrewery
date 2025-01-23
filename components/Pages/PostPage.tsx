@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Boxlist from "../../components/Boxlist";
 import Article from "../../components/Article";
+import Navbar from "../Navbar";
 
 
 const id = 2
@@ -23,20 +24,7 @@ export default function PostPage() {
               OSRBrewery
             </div>
           </Link>
-          <nav className="flex font-bold items-center space-x-6 text-base leading-5">
-            <Link href="" className="hover:underline">
-              Home
-            </Link>
-            <Link href="#" className="hover:underline">
-              Profile
-            </Link>
-            <Link href="/upload" className="hover:underline">
-              Upload
-            </Link>
-            <Link href="#" className="hover:underline">
-              About
-            </Link>
-          </nav>
+          <Navbar />
         </header>
         <main className="">
           <div className=" flex flex-row">
