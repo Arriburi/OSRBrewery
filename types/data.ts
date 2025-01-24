@@ -5,7 +5,7 @@ export type KeyValue<K extends string = string, V = string | number> = {
 }
 
 export type BaseArticle<K extends string = string, V = string | number> = {
-  id: string;
+  id: number;
   title: string;
   text: string;
   tags: string[];
@@ -16,13 +16,13 @@ export type BaseArticle<K extends string = string, V = string | number> = {
   author: string;
 }
 export const SpellKeys = ["Level", "Range", "Duration", "Area of Effect", "Components", "Casting Time", "Saving Throw"] as const;
-type SpellKeysType = (typeof SpellKeys)[number];
+export type SpellKeysType = (typeof SpellKeys)[number];
 export type SpellArticle = BaseArticle<SpellKeysType>;
 
 export const MonsterKeys = [
-  "Frequency", "No.Encountered", "Size", "Move",
+  "Frequency", "# Encountered", "Size", "Move",
   "Armour Class", "Hit Dice", "Attacks", "Damage",
   "Special Attacks", "Special Defences", "Magic Resistance",
   "Lair Probability", "Intelligence", "Alignment", "Level/XP"] as const;
-type MonsterKeysType = (typeof MonsterKeys)[number];
+export type MonsterKeysType = (typeof MonsterKeys)[number];
 export type MonsterArticle = BaseArticle<MonsterKeysType>;

@@ -1,6 +1,6 @@
 'use client'
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
-import { SpellKeys, MonsterKeys } from '../types/data';
+import { SpellKeys, MonsterKeys, MonsterKeysType, SpellKeysType } from '../types/data';
 import TagInput from "./TagInput";
 import { useEffect } from "react";
 
@@ -9,17 +9,27 @@ type Inputs = {
   text: string;
   tags: string[];
   type: string;
-  properties?: string[];
+  properties?: Record<MonsterKeysType | SpellKeysType, string>;
   imgSrc?: FileList;
 };
 
-function getKeysByType(inputType: string): string[] {
+function getKeysByType(inputType: string): MonsterKeysType[] | SpellKeysType[] {
   if (inputType == "Spell") {
     return [...SpellKeys];
   } else if (inputType == "Monster") {
     return [...MonsterKeys];
   } else
     return []
+}
+
+function cleanProperties(properties?: Record<string, string | undefined>) {
+  if (properties) {
+    for (const key in properties) {
+      if (properties[key] === "") {
+        delete properties[key];
+      }
+    }
+  }
 }
 
 export default function ArticleForm() {
@@ -29,6 +39,7 @@ export default function ArticleForm() {
     unregister,
     handleSubmit,
     watch,
+    setValue
   } = useForm<Inputs>()
   const onSubmit: SubmitHandler<Inputs> = async (data) => { // console.log("Form data:", data);
 
@@ -38,6 +49,8 @@ export default function ArticleForm() {
     formData.append("text", data.text);
     formData.append("tags", JSON.stringify(data.tags));
     formData.append("type", data.type);
+
+    cleanProperties(data.properties);
     formData.append("properties", JSON.stringify(data.properties));
 
     console.log(data.properties)
@@ -48,9 +61,6 @@ export default function ArticleForm() {
 
 
     try {
-      if (data.properties) {
-        data.properties = data.properties.filter(Boolean); // Remove empty strings
-      }
 
       // POST reqest
       const response = await fetch("/api/entries", {
@@ -70,13 +80,15 @@ export default function ArticleForm() {
     }
   };
 
-
   const inputType = watch("type");
   const typeKeys = getKeysByType(inputType)
+  console.log("Typekeys are", typeKeys)
+
 
   useEffect(() => {
     unregister("properties");
-  }, [inputType, unregister]);
+    setValue("tags", [inputType]);  //delets all tags when type changes
+  }, [inputType, unregister, setValue]);
 
   return (
     <div className="bg-gray-800 text-white p-6 rounded-lg shadow-md w-full">
@@ -94,11 +106,12 @@ export default function ArticleForm() {
           <option value="Other">Other</option>
         </select>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-          {typeKeys.map((key, index) => (
-            <div className="mb-4" key={index}>
+          {typeKeys.map((key) => (
+            <div className="mb-4" key={key}>
               <label className="block text-sm font-medium mb-1">{key}</label>
-              <input className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                {...register(`properties.${index}`)} />
+              <input
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                {...register(`properties.${key}`)} />
             </div>
           ))}
         </div>
@@ -128,7 +141,7 @@ export default function ArticleForm() {
           control={control}
           name="tags"
           render={({ field: { onChange, value } }) => (
-            <TagInput onChange={onChange} value={value} />
+            <TagInput onChange={onChange} tags={value} />
           )}
         />
         <div className="flex justify-end">

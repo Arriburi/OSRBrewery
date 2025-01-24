@@ -33,6 +33,5 @@ INSERT INTO entries (title, text, tags, type, imgSrc, date, author, properties) 
   '{"frequency": "Common", "size": "Small", "alignment": "Neutral Evil"}'
 );
 
-DROP TABLE entries
 DELETE FROM entries
-WHERE id IN (4, 5, 6, 7, 8, 9, 10, 11)
+WHERE id IN (3, 4, 5, 6, 7, 8, 9);
