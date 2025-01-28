@@ -22,9 +22,9 @@ function getKeysByType(inputType: string): MonsterKeysType[] | SpellKeysType[] {
     return []
 }
 
-function cleanProperties(properties?: Record<string, string | undefined>) {
+function cleanProperties(properties?: Record<MonsterKeysType | SpellKeysType, string>) {
   if (properties) {
-    for (const key in properties) {
+    for (const key of Object.keys(properties) as (keyof typeof properties)[]) {
       if (properties[key] === "") {
         delete properties[key];
       }

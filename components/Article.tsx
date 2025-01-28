@@ -1,11 +1,11 @@
-import { KeyValue } from "../types/data";
+import { MonsterKeysType, SpellKeysType } from "../types/data";
 
 interface ArticleProps {
   id: number;
 }
 
 const fetchArticleById = async (id: number) => {
-  const response = await fetch(`http://localhost:3000/api/entries?id=${id}`);
+  const response = await fetch(`http://localhost:3000/api/entries/${id}`);
   if (!response.ok) {
     throw new Error("Failed to fetch article");
   }
@@ -13,13 +13,14 @@ const fetchArticleById = async (id: number) => {
 };
 
 
-function createPropertyDiv(property: KeyValue) {
+function createPropertyDiv(property?: Record<MonsterKeysType | SpellKeysType, string | number>) {
   return (
     <div>
-      <b>{property.key}: </b>{property.value}
+      <b></b>
     </div>
   );
 }
+
 
 
 export default async function Article({ id }: ArticleProps) {
@@ -45,7 +46,7 @@ export default async function Article({ id }: ArticleProps) {
       </div>
       <div className="divide-y divide-gray-200 pt-10">
         <h2 className="text-lg text-gray-800">Humanoid</h2>
-        {article.properties?.map((p: KeyValue) => createPropertyDiv(p))}
+        {/* Here the map  */}
       </div>
       <div className="prose max-w-none pt-10 pb-8">
         <p>

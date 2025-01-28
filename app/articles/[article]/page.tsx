@@ -4,6 +4,7 @@ import Boxlist from "../../../components/Boxlist";
 import Article from "../../../components/Article";
 import Navbar from "@/components/Navbar";
 
+
 export default async function ArticleDisplay({ params }: { params: { article: number } }
 ) {
 
