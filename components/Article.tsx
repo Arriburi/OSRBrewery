@@ -1,4 +1,3 @@
-import { MonsterKeysType, SpellKeysType } from "../types/data";
 
 interface ArticleProps {
   id: number;
@@ -11,16 +10,6 @@ const fetchArticleById = async (id: number) => {
   }
   return response.json();
 };
-
-
-function createPropertyDiv(property?: Record<MonsterKeysType | SpellKeysType, string | number>) {
-  return (
-    <div>
-      <b></b>
-    </div>
-  );
-}
-
 
 
 export default async function Article({ id }: ArticleProps) {
@@ -50,7 +39,7 @@ export default async function Article({ id }: ArticleProps) {
       </div>
       <div className="prose max-w-none pt-10 pb-8">
         <p>
-          {article.text}
+          {article.description}
         </p>
       </div>
     </div>

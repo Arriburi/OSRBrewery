@@ -1,15 +1,15 @@
 'use client'
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
-import { SpellKeys, MonsterKeys, MonsterKeysType, SpellKeysType } from '../types/data';
+import { SpellKeys, MonsterKeys, MonsterKeysType, SpellKeysType, ArticleType, Properties } from '../types/data';
 import TagInput from "./TagInput";
 import { useEffect } from "react";
 
 type Inputs = {
   title: string;
-  text: string;
+  description: string;
   tags: string[];
-  type: string;
-  properties?: Record<MonsterKeysType | SpellKeysType, string>;
+  type: ArticleType;
+  properties: Properties;
   imgSrc?: FileList;
 };
 
@@ -22,15 +22,6 @@ function getKeysByType(inputType: string): MonsterKeysType[] | SpellKeysType[] {
     return []
 }
 
-function cleanProperties(properties?: Record<MonsterKeysType | SpellKeysType, string>) {
-  if (properties) {
-    for (const key of Object.keys(properties) as (keyof typeof properties)[]) {
-      if (properties[key] === "") {
-        delete properties[key];
-      }
-    }
-  }
-}
 
 export default function ArticleForm() {
   const {
@@ -45,13 +36,17 @@ export default function ArticleForm() {
 
     const formData = new FormData();
 
+    const cleanedProperties = Object.fromEntries(
+      Object.entries(data.properties).filter(([key, value]) => {
+        return value !== "" && value !== null && value !== undefined;
+      })
+    );
+
     formData.append("title", data.title);
-    formData.append("text", data.text);
+    formData.append("description", data.description);
     formData.append("tags", JSON.stringify(data.tags));
     formData.append("type", data.type);
-
-    cleanProperties(data.properties);
-    formData.append("properties", JSON.stringify(data.properties));
+    formData.append("properties", JSON.stringify(cleanedProperties));
 
     console.log(data.properties)
 
@@ -82,7 +77,6 @@ export default function ArticleForm() {
 
   const inputType = watch("type");
   const typeKeys = getKeysByType(inputType)
-  console.log("Typekeys are", typeKeys)
 
 
   useEffect(() => {
@@ -95,7 +89,7 @@ export default function ArticleForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         {/*TYPE ARTICLE*/}
         <label className="block text-sm font-medium mb-1">Type of Article</label>
-        <select className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        <select className="w-full mb-4 px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
           {...register("type")}>
           <option value="Default">Default</option>
           <option value="Spell">Spell</option>
@@ -125,7 +119,7 @@ export default function ArticleForm() {
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea placeholder="Insert description" rows={6} className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
-            {...register("text")} />
+            {...register("description")} />
         </div>
         {/* UPLOAD INPUT */}
         <div className="mb-4">

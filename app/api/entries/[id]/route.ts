@@ -23,13 +23,13 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
     const article = {
       id: entry.id,
       title: entry.title,
-      text: entry.text,
+      description: entry.description,
       tags: JSON.parse(entry.tags || "[]"),
       type: entry.type,
       imgSrc: entry.imgSrc || null,
       date: new Date(entry.date),
       author: entry.author,
-      properties: JSON.parse(entry.properties || "{}"),
+      properties: entry.properties || "{}",
     };
 
     return NextResponse.json(article);

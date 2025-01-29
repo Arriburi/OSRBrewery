@@ -44,7 +44,7 @@ function ArticleCard({ article }: HomeArticleProps) {
         </div>
       </div>
       <div className="py-8">
-        <p>{article.text}</p>
+        <p>{article.description}</p>
       </div>
     </div>
   );
