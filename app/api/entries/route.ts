@@ -29,16 +29,27 @@ export async function GET() {
     const db = await openDB();
     const entries = await db.all("SELECT * FROM entries");
 
+    const default_images: Record<ArticleType, string> = {
+      "Default": "/default/default-article.png",
+      "Spell": "/default/default-spell.png",
+      "Monster": "/default/default-monster.png",
+      "Adventure": "/default/default-adventure.png",
+      "Map": "/default/default-map.png",
+      "Magic Item": "/default/default-magic-item.png",
+      "Encounter": "/default/default-encounter.png",
+      "Other": "/default/default-other.png"
+    };
+
     const articles = entries.map((entry): Article => ({
       id: entry.id.toString(),
       title: entry.title,
       description: entry.description,
       tags: JSON.parse(entry.tags || "[]"),
       type: entry.type,
-      imgSrc: entry.imgSrc || null,
+      imgSrc: entry.imgSrc || default_images[entry.type as ArticleType],
       date: new Date(entry.date),
       author: entry.author,
-      properties: JSON.parse(entry.properties || "{}"),
+      properties: entry.properties || "{}"
     }));
 
     return NextResponse.json(articles);
@@ -65,13 +76,17 @@ export async function POST(request: Request) {
     const tags = formData.get("tags");
 
 
-    const tempPath = image.name;
-    const publicPath = path.join(process.cwd(), "public", "upload");
-    const finalPath = path.join(publicPath, tempPath);
+    let imagePath: string | null = null;
+    if (image !== null) {
+      const tempPath = image.name;
+      const publicPath = path.join(process.cwd(), "public", "upload");
+      const finalPath = path.join(publicPath, tempPath);
 
 
-    const buffer = Buffer.from(await image.arrayBuffer());
-    fs.writeFileSync(finalPath, buffer);
+      const buffer = Buffer.from(await image.arrayBuffer());
+      fs.writeFileSync(finalPath, buffer);
+      imagePath = tempPath;
+    }
 
     const query = "INSERT INTO entries (title, description, tags, type, imgSrc, date, author, properties) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
     const values = [
@@ -79,7 +94,7 @@ export async function POST(request: Request) {
       description,
       tags,
       type,
-      image.name,
+      imagePath,
       new Date().toISOString(),
       defaultAuthor,
       properties,

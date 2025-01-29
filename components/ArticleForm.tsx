@@ -13,6 +13,7 @@ type Inputs = {
   imgSrc?: FileList;
 };
 
+
 function getKeysByType(inputType: string): MonsterKeysType[] | SpellKeysType[] {
   if (inputType == "Spell") {
     return [...SpellKeys];
@@ -36,24 +37,26 @@ export default function ArticleForm() {
 
     const formData = new FormData();
 
-    const cleanedProperties = Object.fromEntries(
-      Object.entries(data.properties).filter(([key, value]) => {
-        return value !== "" && value !== null && value !== undefined;
-      })
-    );
+    if (data.properties !== undefined) {
+      const cleanedProperties = Object.fromEntries(
+        Object.entries(data.properties).filter(([, value]) => {
+          return value !== "" && value !== null && value !== undefined;
+        })
+      );
+      formData.append("properties", JSON.stringify(cleanedProperties));
+    }
 
     formData.append("title", data.title);
     formData.append("description", data.description);
     formData.append("tags", JSON.stringify(data.tags));
     formData.append("type", data.type);
-    formData.append("properties", JSON.stringify(cleanedProperties));
+
 
     console.log(data.properties)
 
     if (data.imgSrc?.[0]) {
-      formData.append("imgSrc", data.imgSrc[0])
+      formData.append("imgSrc", data.imgSrc[0]);
     }
-
 
     try {
 

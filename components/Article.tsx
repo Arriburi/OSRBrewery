@@ -1,3 +1,5 @@
+import { Properties } from "@/types/data";
+import Image from "next/image";
 
 interface ArticleProps {
   id: number;
@@ -16,6 +18,7 @@ export default async function Article({ id }: ArticleProps) {
 
   const article = await fetchArticleById(id);
   console.log("ACI", article);
+  console.log(article.imgSrc);
 
   if (article == null) {
     return <div>Loading...</div>
@@ -33,9 +36,18 @@ export default async function Article({ id }: ArticleProps) {
           <p>Published on {article.date}</p>
         </div>
       </div>
+      <Image src={"/upload/" + article.imgSrc || "/DefaultSpell.jpg"} width={300} height={300} alt={article.title} className="mb-8" />
       <div className="divide-y divide-gray-200 pt-10">
-        <h2 className="text-lg text-gray-800">Humanoid</h2>
-        {/* Here the map  */}
+        <div>
+          <h2 className="text-lg text-gray-800">Humanoid</h2>
+          {Object.entries(
+            JSON.parse(article.properties) as Properties
+          ).map(([key, value]) => (
+            <div key={key}>
+              <b>{key}: </b>{value}
+            </div>
+          ))}
+        </div>
       </div>
       <div className="prose max-w-none pt-10 pb-8">
         <p>

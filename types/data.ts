@@ -1,23 +1,20 @@
 export type ArticleType = "Default" | "Spell" | "Monster" | "Adventure" | "Map" | "Magic Item" | "Encounter" | "Other"
-export type KeyValue<K extends string = string, V = string | number> = {
-  key: K;
-  value: V;
-}
+export type Properties = Record<MonsterKeysType | SpellKeysType, string | number>
 
-export type BaseArticle<K extends string = string, V = string | number> = {
+export type BaseArticle = {
   id: number;
   title: string;
-  text: string;
+  description: string;
   tags: string[];
   type: ArticleType;
-  imgSrc?: string;
-  properties?: KeyValue<K, V>[];
+  imgSrc?: FileList;
+  properties?: Properties;
   date: Date;
   author: string;
 }
+
 export const SpellKeys = ["Level", "Range", "Duration", "Area of Effect", "Components", "Casting Time", "Saving Throw"] as const;
 export type SpellKeysType = (typeof SpellKeys)[number];
-export type SpellArticle = BaseArticle<SpellKeysType>;
 
 export const MonsterKeys = [
   "Frequency", "# Encountered", "Size", "Move",
@@ -25,4 +22,3 @@ export const MonsterKeys = [
   "Special Attacks", "Special Defences", "Magic Resistance",
   "Lair Probability", "Intelligence", "Alignment", "Level/XP"] as const;
 export type MonsterKeysType = (typeof MonsterKeys)[number];
-export type MonsterArticle = BaseArticle<MonsterKeysType>;

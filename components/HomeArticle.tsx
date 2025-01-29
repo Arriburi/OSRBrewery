@@ -21,10 +21,10 @@ function ArticleCard({ article }: HomeArticleProps) {
   return (
     <div className="flex flex-col">
       <div className="flex flex-row items-center">
-        <Link href={`/${article.title}`}>
+        <Link href={`/articles/${article.id}`}>
           <div className="relative w-[250px] h-[200px]">
             <Image
-              src={"/upload/" + article.imgSrc || "/spell.svg"}
+              src={"/upload/" + article.imgSrc}
               alt={article.title || "Article image"}
               layout="fill"
               className="shadow-[4px_4px_0px_rgba(0,0,0,1)] object-cover"
@@ -32,7 +32,9 @@ function ArticleCard({ article }: HomeArticleProps) {
           </div>
         </Link>
         <div className="flex flex-col pl-5">
-          <div className="font-bold text-4xl">{article.title}</div>
+          <Link href={`/articles/${article.id}`}>
+            <div className="font-bold text-4xl">{article.title}</div>
+          </Link>
           <div className="text-base mt-4">
             {article.tags.map((tag, index) => (
               <span

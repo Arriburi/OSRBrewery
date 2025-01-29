@@ -4,10 +4,10 @@ CREATE TABLE IF NOT EXISTS entries (
   description TEXT NOT NULL,
   tags JSON, -- JSON array for tags
   type TEXT NOT NULL, 
-  imgSrc TEXT, 
+  imgSrc TEXT NULL, 
   date TEXT NOT NULL, 
   author TEXT NOT NULL,
-  properties JSON -- JSON object for key-value properties
+  properties JSON NULL -- JSON object for key-value properties
 );
 
 ALTER TABLE entries
@@ -22,7 +22,7 @@ INSERT INTO entries (title, description, tags, type, imgSrc, date, author, prope
   "fireball.jpg",
   "2023-12-23T12:00:00.000Z",
   "Admin",
-  '{"damage": "8d6", "area": "20ft radius", "effects": "explosion"}'
+  '{"Damage": "8d6", "Area": "20ft Radius", "Effects": "Explosion"}'
 ),
 (
   "Monster Manual Entry: Kobold",
@@ -32,8 +32,8 @@ INSERT INTO entries (title, description, tags, type, imgSrc, date, author, prope
   "kobold.jpg",
   "2023-12-22T10:00:00.000Z",
   "Admin",
-  '{"frequency": "Common", "size": "Small", "alignment": "Neutral Evil"}'
+  '{"Frequency": "common", "Size": "small", "Alignment": "Neutral Evil"}'
 );
 
 DELETE FROM entries
-WHERE id IN (14);
+WHERE id IN (20);
