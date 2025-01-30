@@ -18,16 +18,21 @@ const fetchAllArticles = async (): Promise<BaseArticle[]> => {
 
 
 function ArticleCard({ article }: HomeArticleProps) {
+
+  const image = article.imgSrc as string;
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-row items-center">
         <Link href={`/articles/${article.id}`}>
           <div className="relative w-[250px] h-[200px]">
             <Image
-              src={"/upload/" + article.imgSrc}
+              src={image}
               alt={article.title || "Article image"}
-              layout="fill"
-              className="shadow-[4px_4px_0px_rgba(0,0,0,1)] object-cover"
+              fill
+              sizes="(max-width: 150) 100vw (max-width: 100px)"
+              className={`bg-orange-50 shadow-[4px_4px_0px_rgba(0,0,0,1)] ${image.includes("/default/") ? "object-contain" : "object-cover"
+                }`}
             />
           </div>
         </Link>

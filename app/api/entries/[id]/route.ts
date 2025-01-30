@@ -20,13 +20,15 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
       return NextResponse.json({ error: "Entry not found", id }, { status: 404 });
     }
 
+    const imgSrc = entry.imgSrc ? `/upload/${entry.imgSrc}` : null;
+
     const article = {
       id: entry.id,
       title: entry.title,
       description: entry.description,
       tags: JSON.parse(entry.tags || "[]"),
       type: entry.type,
-      imgSrc: entry.imgSrc || null,
+      imgSrc: imgSrc,
       date: new Date(entry.date),
       author: entry.author,
       properties: entry.properties || "{}",

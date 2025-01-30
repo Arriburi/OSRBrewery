@@ -35,11 +35,20 @@ export default async function Article({ id }: ArticleProps) {
           <p>By {article.author}</p>
           <p>Published on {article.date}</p>
         </div>
-      </div>
-      <Image src={"/upload/" + article.imgSrc || "/DefaultSpell.jpg"} width={300} height={300} alt={article.title} className="mb-8" />
+      </div >
+      {article.imgSrc && (
+        <Image
+          src={article.imgSrc}
+          width={500}
+          height={500}
+          layout="intrinsic"
+          alt={article.title}
+          className="mt-8 mb-8"
+        />
+      )}
       <div className="divide-y divide-gray-200 pt-10">
+        <h2 className="text-lg text-gray-800">Humanoid</h2>
         <div>
-          <h2 className="text-lg text-gray-800">Humanoid</h2>
           {Object.entries(
             JSON.parse(article.properties) as Properties
           ).map(([key, value]) => (

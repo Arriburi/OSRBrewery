@@ -9,7 +9,7 @@ type Inputs = {
   description: string;
   tags: string[];
   type: ArticleType;
-  properties: Properties;
+  properties?: Properties;
   imgSrc?: FileList;
 };
 

@@ -19,7 +19,7 @@ INSERT INTO entries (title, description, tags, type, imgSrc, date, author, prope
   "An in-depth guide on casting Fireball, one of the most popular spells in Dungeons & Dragons.",
   '["Magic", "Spell", "Fireball", "Dnd"]',
   "Spell",
-  "fireball.jpg",
+   NULL,
   "2023-12-23T12:00:00.000Z",
   "Admin",
   '{"Damage": "8d6", "Area": "20ft Radius", "Effects": "Explosion"}'
@@ -36,4 +36,4 @@ INSERT INTO entries (title, description, tags, type, imgSrc, date, author, prope
 );
 
 DELETE FROM entries
-WHERE id IN (20);
+WHERE id IN (25);

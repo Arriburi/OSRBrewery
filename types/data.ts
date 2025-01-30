@@ -7,7 +7,7 @@ export type BaseArticle = {
   description: string;
   tags: string[];
   type: ArticleType;
-  imgSrc?: FileList;
+  imgSrc?: string;
   properties?: Properties;
   date: Date;
   author: string;

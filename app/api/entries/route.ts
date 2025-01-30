@@ -30,14 +30,14 @@ export async function GET() {
     const entries = await db.all("SELECT * FROM entries");
 
     const default_images: Record<ArticleType, string> = {
-      "Default": "/default/default-article.png",
-      "Spell": "/default/default-spell.png",
-      "Monster": "/default/default-monster.png",
-      "Adventure": "/default/default-adventure.png",
-      "Map": "/default/default-map.png",
-      "Magic Item": "/default/default-magic-item.png",
-      "Encounter": "/default/default-encounter.png",
-      "Other": "/default/default-other.png"
+      "Default": "/default/default-article.svg",
+      "Spell": "/default/default-spell.svg",
+      "Monster": "/default/default-monster.svg",
+      "Adventure": "/default/default-adventure.svg",
+      "Map": "/default/default-map.svg",
+      "Magic Item": "/default/default-magic-item.svg",
+      "Encounter": "/default/default-encounter.svg",
+      "Other": "/default/default-other.svg"
     };
 
     const articles = entries.map((entry): Article => ({
@@ -46,7 +46,7 @@ export async function GET() {
       description: entry.description,
       tags: JSON.parse(entry.tags || "[]"),
       type: entry.type,
-      imgSrc: entry.imgSrc || default_images[entry.type as ArticleType],
+      imgSrc: entry.imgSrc ? `/upload/${entry.imgSrc}` : default_images[entry.type as ArticleType],
       date: new Date(entry.date),
       author: entry.author,
       properties: entry.properties || "{}"
@@ -77,10 +77,12 @@ export async function POST(request: Request) {
 
 
     let imagePath: string | null = null;
+
     if (image !== null) {
       const tempPath = image.name;
       const publicPath = path.join(process.cwd(), "public", "upload");
       const finalPath = path.join(publicPath, tempPath);
+      console.log("The final path" + finalPath);
 
 
       const buffer = Buffer.from(await image.arrayBuffer());
