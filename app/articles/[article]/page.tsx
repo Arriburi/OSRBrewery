@@ -31,8 +31,8 @@ export default async function ArticleDisplay({ params }: { params: { article: nu
         </header>
         <main>
           <div className=" flex flex-row">
-            <div className="flex-1 bg-white mr-4 py-8">
-              <div className="container mx-auto px-4">
+            <div className="flex-1 bg-white p-[20px] mr-4 py-8">
+              <div className="container mx-auto px-4" >
                 <Article id={id} />
               </div>
             </div>

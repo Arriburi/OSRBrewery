@@ -13,6 +13,16 @@ const fetchArticleById = async (id: number) => {
   return response.json();
 };
 
+const formatDate = (isoString: string): string => {
+  const date = new Date(isoString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
+
 
 export default async function Article({ id }: ArticleProps) {
 
@@ -24,16 +34,19 @@ export default async function Article({ id }: ArticleProps) {
     return <div>Loading...</div>
   }
 
+  const formattedDate = formatDate(article.date);
+
+
   return (
     <div className="container mx-auto px-4">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-4xl pb-2 font-bold text-gray-800">{article.title} </h1>
+          <h1 className="text-4xl pb-2 font-bold text-gray-800 break-words">{article.title} </h1>
           <span className="px-3 py-1 rounded bg-gray-900 text-white">#{article.type}</span>
         </div>
         <div className="text-right text-sm text-gray-600">
           <p>By {article.author}</p>
-          <p>Published on {article.date}</p>
+          <p>Published on {formattedDate}</p>
         </div>
       </div >
       {article.imgSrc && (
