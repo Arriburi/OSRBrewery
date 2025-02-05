@@ -5,8 +5,7 @@ import Article from "../../../components/Article";
 import Navbar from "@/components/Navbar";
 
 
-export default async function ArticleDisplay({ params }: { params: { article: number } }
-) {
+export default async function ArticleDisplay({ params }: { params: { article: number } }) {
 
   const id = (await params).article;
   console.log("THE ID OF THIS IS", id);

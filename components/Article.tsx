@@ -36,15 +36,25 @@ export default async function Article({ id }: ArticleProps) {
 
   const formattedDate = formatDate(article.date);
 
+  const properties = JSON.parse(article.properties) as Properties;
+  const possibleHeadingKeys = ['School', 'Creature Type'] as const;
+  const [h2Key] = possibleHeadingKeys.filter(key => key in properties);
+  const h2Value = h2Key ? properties[h2Key] : null;
 
   return (
     <div className="container mx-auto px-4">
       <div className="flex justify-between items-end">
         <div>
           <h1 className="text-4xl pb-2 font-bold text-gray-800 break-words">{article.title} </h1>
-          <span className="px-3 py-1 rounded bg-gray-900 text-white">#{article.type}</span>
+          <div className="flex flex-wrap max-w-[450px]">
+            {article.tags.map((tag: string) => (
+              <span key={tag} className="px-3 py-1 mb-1 rounded bg-gray-900 text-white mr-2">
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
-        <div className="text-right text-sm text-gray-600">
+        <div className="text-right text-sm break-words text-gray-600">
           <p>By {article.author}</p>
           <p>Published on {formattedDate}</p>
         </div>
@@ -52,26 +62,26 @@ export default async function Article({ id }: ArticleProps) {
       {article.imgSrc && (
         <Image
           src={article.imgSrc}
-          width={500}
-          height={500}
+          width={350}
+          height={350}
           layout="intrinsic"
           alt={article.title}
-          className="mt-8 mb-8"
+          className="mt-8 mb-4"
         />
       )}
-      <div className="divide-y divide-gray-200 pt-10">
-        <h2 className="text-lg text-gray-800">Humanoid</h2>
-        <div>
-          {Object.entries(
-            JSON.parse(article.properties) as Properties
-          ).map(([key, value]) => (
-            <div key={key}>
-              <b>{key}: </b>{value}
-            </div>
-          ))}
+      <div className="divide-y divide-gray-200 pb-5">
+        {h2Value && <h2 className="text-lg text-gray-800">{h2Value}</h2>}
+        <div className="divide-y dark:divide-gray-300" >
+          {Object.entries(properties)
+            .filter(([key]) => key !== h2Key)
+            .map(([key, value]) => (
+              <div key={key}>
+                <b>{key}: </b>{value}
+              </div>
+            ))}
         </div>
       </div>
-      <div className="prose max-w-none pt-10 pb-8">
+      <div className="prose max-w-none pb-8">
         <p>
           {article.description}
         </p>
