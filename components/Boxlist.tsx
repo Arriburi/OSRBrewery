@@ -19,21 +19,21 @@ export default async function Boxlist() {
     : [];
 
   return (
-    <div className="bg-white p-4">
-      <h2 className="text-xl font-bold text-gray-800 mb-4">Recent Posts</h2>
+    <div className="bg-accent p-4">
+      <h2 className="text-xl font-bold text-foreground mb-4">Recent Posts</h2>
       <ul className="list-none">
         {recentArticles.map((article) => (
           <li key={article.id} className="mb-2">
             <a
               href={`/articles/${article.id}`}
-              className="text-gray-700 hover:text-gray-900"
+              className="text-foreground hover:text-accent"
             >
               {article.title}
             </a>
           </li>
         ))}
         {recentArticles.length === 0 && (
-          <li className="text-gray-500">No recent articles</li>
+          <li className="text-foreground">No recent articles</li>
         )}
       </ul>
     </div>

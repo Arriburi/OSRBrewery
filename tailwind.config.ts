@@ -9,13 +9,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        ashgray: '#CAD2C5',
-        cambridge: '#84A98C',
-        hooker: '#52796F',
-        darkslate: '#354F52',
-        charcoal: '#2F3E46',
+        "sand": '#f0deb6',
+        "olive-drab": '#495040',
+        "char-coal": '#323431',
+        "apri-cot": '#efab6e',
+        "muted-Olive": '#767154',
+
+
+        "background": "#495040",  //bg
+        "foreground": "#FFFFFF",  //main text color
+        "primary": "#efab6e",     //buttons
+        "secondary": "#495040",   //UI secondary buttons
+        "accent": "#767154",      //allerts, borders accents
       },
     },
   },

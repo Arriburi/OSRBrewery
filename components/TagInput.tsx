@@ -32,7 +32,7 @@ export default function TagInput({ tags = [], onChange }: TagInputProps) {
           value={(tag)}
           onChange={(e) => setTag(e.target.value)}
           placeholder="Add a tag"
-          className="flex-grow px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="flex-grow px-3 py-2 bg-primary text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
         <button
           type="button" //important otherwise it does onSubmit

@@ -9,6 +9,5 @@
     //ADDED THE BELOW
     "**/.next": true,
     "**/node_modules": true,
-    
   }
 }

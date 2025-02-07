@@ -45,16 +45,16 @@ export default async function Article({ id }: ArticleProps) {
     <div className="container mx-auto px-4">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-4xl pb-2 font-bold text-gray-800 break-words">{article.title} </h1>
+          <h1 className="text-4xl pb-2 font-bold text-foreground break-words">{article.title} </h1>
           <div className="flex flex-wrap max-w-[450px]">
             {article.tags.map((tag: string) => (
-              <span key={tag} className="px-3 py-1 mb-1 rounded bg-gray-900 text-white mr-2">
+              <span key={tag} className="px-3 py-1 mb-1 rounded bg-primary text-foreground mr-2">
                 {tag}
               </span>
             ))}
           </div>
         </div>
-        <div className="text-right text-sm break-words text-gray-600">
+        <div className="text-right text-sm break-words text-foreground">
           <p>By {article.author}</p>
           <p>Published on {formattedDate}</p>
         </div>
@@ -69,9 +69,9 @@ export default async function Article({ id }: ArticleProps) {
           className="mt-8 mb-4"
         />
       )}
-      <div className="divide-y divide-gray-200 pb-5">
-        {h2Value && <h2 className="text-lg text-gray-800">{h2Value}</h2>}
-        <div className="divide-y dark:divide-gray-300" >
+      <div className="divide-y divide-background pb-5">
+        {h2Value && <h2 className="text-lg text-foreground">{h2Value}</h2>}
+        <div className="divide-y text-foreground dark:divide-background" >
           {Object.entries(properties)
             .filter(([key]) => key !== h2Key)
             .map(([key, value]) => (

@@ -44,7 +44,7 @@ function ArticleCard({ article }: HomeArticleProps) {
             {article.tags.map((tag, index) => (
               <span
                 key={index}
-                className="mr-2 px-3 py-1 rounded bg-gray-900 text-white">
+                className="mr-2 px-3 py-1 rounded bg-accent text-foreground">
                 #{tag}</span>
             ))}
           </div>
