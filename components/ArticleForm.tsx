@@ -92,7 +92,7 @@ export default function ArticleForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         {/*TYPE ARTICLE*/}
         <label className="block text-sm font-medium mb-1">Type of Article</label>
-        <select className="w-full mb-4 px-3 py-2 bg-secondary text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        <select className="w-full mb-4 px-3 py-2 bg-primary text-foreground rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
           {...register("type")}>
           <option value="Default">Default</option>
           <option value="Spell">Spell</option>
@@ -107,7 +107,7 @@ export default function ArticleForm() {
             <div className="mb-4" key={key}>
               <label className="block text-sm font-medium mb-1">{key}</label>
               <input
-                className="w-full px-3 py-2 bg-secondary text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-3 py-2 bg-primary text-foreground rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 {...register(`properties.${key}`)} />
             </div>
           ))}
@@ -115,13 +115,13 @@ export default function ArticleForm() {
         {/* TITLE */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Title</label>
-          <input placeholder="Insert title" className="w-full px-3 py-2 bg-secondary text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          <input placeholder="Insert title" className="w-full px-3 py-2 bg-primary text-foreground rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             {...register("title")} />
         </div>
         {/* TEXT/DESCRIPTION */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea placeholder="Insert description" rows={6} className="w-full px-3 py-2 bg-secondary text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+          <textarea placeholder="Insert description" rows={6} className="w-full px-3 py-2 bg-primary text-foreground rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
             {...register("description")} />
         </div>
         {/* UPLOAD INPUT */}
@@ -130,7 +130,7 @@ export default function ArticleForm() {
           <input
             type="file"
             accept=".jpg,.jpeg,.png,.pdf"
-            className="w-full bg-secondary text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none file:py-2 file:px-4 file:rounded-md file:border-none file:bg-blue-600 file:text-white file:cursor-pointer"
+            className="w-full bg-primary text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none file:py-2 file:px-4 file:rounded-md file:border-none file:bg-accent2 file:text-black file:cursor-pointer"
             {...register("imgSrc")} />
         </div>
         {/* TAGS INPUT */}
@@ -144,7 +144,7 @@ export default function ArticleForm() {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white font-medium focus:ring-2 focus:ring-blue-400">
+            className="bg-accent hover:bg-secondary px-4 py-2 rounded-md text-black font-medium focus:bg-secondary">
             Post
           </button>
         </div>

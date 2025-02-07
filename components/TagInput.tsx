@@ -32,18 +32,18 @@ export default function TagInput({ tags = [], onChange }: TagInputProps) {
           value={(tag)}
           onChange={(e) => setTag(e.target.value)}
           placeholder="Add a tag"
-          className="flex-grow px-3 py-2 bg-primary text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="flex-grow px-3 py-2 bg-primary text-foreground rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
         <button
           type="button" //important otherwise it does onSubmit
           onClick={() => {
             addTag(tag);
-          }} className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md text-white font-medium"
+          }} className="bg-accent2 hover:bg-secondary px-3 py-2 rounded-md text-black font-medium"
         > Add tag </button>
       </div>
       <div className="flex flex-wrap mt-2 mr-2">
         {tags.map((tag, index) => (
-          <div key={index} className="bg-blue-700 text-white mb-2 mr-1 px-3 py-1 rounded-full text-sm flex items-center space-x-2">
+          <div key={index} className="bg-accent text-black mb-2 mr-1 px-3 py-1 rounded-full text-sm flex items-center space-x-2">
             <span>{tag}</span>
             <button onClick={() => removeTag(tag)} className="ml-1 text-red-400 hover:text-red-600"
               type="button"

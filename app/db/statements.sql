@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS entries;
 
 DELETE FROM entries
-WHERE id IN (25);
+WHERE id IN (10, 12, 11, 13);
 
 
 CREATE TABLE IF NOT EXISTS entries (

@@ -48,7 +48,7 @@ export default async function Article({ id }: ArticleProps) {
           <h1 className="text-4xl pb-2 font-bold text-foreground break-words">{article.title} </h1>
           <div className="flex flex-wrap max-w-[450px]">
             {article.tags.map((tag: string) => (
-              <span key={tag} className="px-3 py-1 mb-1 rounded bg-primary text-foreground mr-2">
+              <span key={tag} className="px-3 py-1 mb-1 rounded bg-accent text-black mr-2">
                 {tag}
               </span>
             ))}

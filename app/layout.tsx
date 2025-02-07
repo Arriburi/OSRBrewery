@@ -32,8 +32,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} 
         antialiased bg-background`}>
         {/* Header placed inside body */}
-        <div className="bg-inherit text-foreground mx-auto max-w-screen-lg px-4">
-          <div className="flex flex-col justify-between">
+        <div className="relative min-h-screen bg-inherit text-foreground mx-auto max-w-screen-lg px-4">
+          <div className=" flex flex-col justify-between">
             <header className="flex items-center justify-between py-10">
               <Link href="#">
                 <div className="flex text-4xl font-bold">
@@ -52,14 +52,13 @@ export default function RootLayout({
 
             {/* Main page content */}
             {children}
-
-            <footer className="flex justify-center mb-2 space-x-2 text-sm">
-              <div>Arrighetti Luca • </div>
-              <div>2024 • </div>
-              <div>OSRB</div>
-            </footer>
           </div>
         </div>
+        <footer className="text-foreground flex justify-center my-3 space-x-2 text-sm">
+          <div>Arrighetti Luca • </div>
+          <div>2024 • </div>
+          <div>OSRB</div>
+        </footer>
       </body>
     </html>
   );

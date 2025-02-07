@@ -40,11 +40,11 @@ function ArticleCard({ article }: HomeArticleProps) {
           <Link href={`/articles/${article.id}`}>
             <div className="font-bold text-4xl">{article.title}</div>
           </Link>
-          <div className="text-base mt-4">
+          <div className="text-base  mt-4">
             {article.tags.map((tag, index) => (
               <span
                 key={index}
-                className="mr-2 px-3 py-1 rounded bg-accent text-foreground">
+                className="mr-2 px-3 py-1 rounded bg-accent text-black">
                 #{tag}</span>
             ))}
           </div>
