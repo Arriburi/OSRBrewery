@@ -19,7 +19,7 @@ export default async function Boxlist() {
     : [];
 
   return (
-    <div className="bg-primary rounded-sm p-4">
+    <div className="bg-primary rounded-md p-4 shadow-lg">
       <h2 className="text-xl font-bold text-foreground mb-4">Recent Posts</h2>
       <ul className="list-none">
         {recentArticles.map((article) => (

@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} 
-        antialiased bg-background`}>
+        antialiased bg-background `}>
         {/* Header placed inside body */}
         <div className="relative min-h-screen bg-inherit text-foreground mx-auto max-w-screen-lg px-4">
           <div className=" flex flex-col justify-between">
@@ -42,7 +42,7 @@ export default function RootLayout({
                     alt="Logo"
                     width={40}
                     height={40}
-                    className="mr-3 text-foreground"
+                    className="mr-3"
                   />
                   OSRBrewery
                 </div>

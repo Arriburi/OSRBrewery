@@ -70,7 +70,7 @@ export default async function Article({ id }: ArticleProps) {
         />
       )}
       <div className="divide-y divide-background pb-5">
-        {h2Value && <h2 className="text-lg text-foreground">{h2Value}</h2>}
+        {h2Value && <h2 className="text-lg font-semibold text-foreground">{h2Value}</h2>}
         <div className="divide-y text-foreground dark:divide-background" >
           {Object.entries(properties)
             .filter(([key]) => key !== h2Key)

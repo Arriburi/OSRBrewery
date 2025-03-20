@@ -9,12 +9,12 @@ export default {
   theme: {
     extend: {
       colors: {
-
-        "background": "#2c3153",  //bg blue dark
+        "background": "#1F2937", //"#2c3153",  //bg blue dark
         "foreground": "#ffffff",  //text white
-        "primary": "#363f84",     //2nd bg blue dark light
-        "secondary": "#d6ad84",   //UI secondary buttons
-        "accent": "#ecc472",
+        "primary": "#2d3b51",//"#363f84",     //2nd bg blue dark light
+        "secondary": "#1F2937",   //2md bg blue dark dark
+        "tertiary": "#3d4896",
+        "accent": "#ecc472",    //buttons
         "accent2": "#eeca80",  //tags
       },
     },

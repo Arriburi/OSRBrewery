@@ -3,6 +3,15 @@ DROP TABLE IF EXISTS entries;
 DELETE FROM entries
 WHERE id IN (10, 12, 11, 13);
 
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL UNIQUE,
+  username TEXT NOT NULL UNIQUE,
+  password_ash TEXT NOT NULL,  
+);
+
+INSERT INTO users (email, username, password_hash)
+VALUES ('alice@example.com', 'alice', '<bcrypt-hash>');
 
 CREATE TABLE IF NOT EXISTS entries (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

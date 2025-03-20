@@ -6,7 +6,7 @@ export default function UploadPage() {
   return (
     <main>
       <div className=" flex flex-row">
-        <div className="flex-1 bg-primary p-[20px] mr-4 py-8">
+        <div className="flex-1 rounded-sm shadow-sm bg-primary  p-[20px] mr-4 py-8">
           <ArticleForm />
         </div>
         <div className="w-[200px]">
