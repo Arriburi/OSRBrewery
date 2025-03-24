@@ -1,4 +1,3 @@
-// app/lib/definitions.ts
 import { z } from 'zod'
 
 export const SignupFormSchema = z
@@ -20,6 +19,11 @@ export const SignupFormSchema = z
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
+
+export const LoginFormSchema = z.object({
+  email: z.string().email('Please enter a valid email.'),
+  password: z.string().min(1, 'Password is required'),
+});
 
 export type FormState =
   | {

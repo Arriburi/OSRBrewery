@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   email TEXT NOT NULL UNIQUE,
   username TEXT NOT NULL UNIQUE,
-  password_ash TEXT NOT NULL,  
+  password_hash TEXT NOT NULL 
 );
 
 INSERT INTO users (email, username, password_hash)
