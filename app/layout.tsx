@@ -4,6 +4,10 @@ import "./globals.css";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
+import { getUser } from "@/app/lib/session";
+import { SessionPayload } from "./lib/definitions";
+
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -21,11 +25,12 @@ export const metadata: Metadata = {
   description: "App for homebrewed TTRPGS",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user: SessionPayload | null = await getUser();
   return (
     <html lang="en">
       <body
@@ -47,7 +52,7 @@ export default function RootLayout({
                   OSRBrewery
                 </div>
               </Link>
-              <Navbar />
+              <Navbar user={user} />
             </header>
 
             {/* Main page content */}

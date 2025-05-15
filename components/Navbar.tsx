@@ -2,16 +2,21 @@
 import Link from "next/link";
 import { BsPersonCircle } from "react-icons/bs";
 import styles from "./Navbar.module.css";
+import { SessionPayload } from "@/app/lib/definitions";
+import { logout } from "@/app/actions/auth";
 
-export default function Navbar() {
+export default function Navbar({ user }: { user: SessionPayload | null }) {
   // TODO: Replace with actual auth state
-  const isLoggedIn = false;
+  const isLoggedIn = user ? true : false;
+
 
   return (
     <div>
       <nav className="pr-2 flex font-bold items-center space-x-6 text-base leading-5">
         <Link href="/" className="hover:underline">Home</Link>
-        <Link href="/upload" className="hover:underline">Upload</Link>
+        {isLoggedIn && (
+          <Link href="/upload" className="hover:underline">Upload</Link>
+        )}
         <Link href="/about" className="hover:underline">About</Link>
 
         {isLoggedIn ? (
@@ -57,9 +62,11 @@ const ProfilePopover = () => {
           View Profile
         </Link>
         <button
+          onClick={logout}
           className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
         >
           Logout
+
         </button>
       </div>
     </div>

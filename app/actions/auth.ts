@@ -85,6 +85,7 @@ export async function login(state: FormState, formData: FormData) {
 
   const { email, password } = validatedFields.data;
 
+
   try {
     const db = await openDB();
 
@@ -110,17 +111,16 @@ export async function login(state: FormState, formData: FormData) {
 
     await createSession({ userId: user.id, username: user.username })
 
-    redirect('/profile')
-
   } catch (error: unknown) {
     console.error('Login error:', error);
     return {
       message: 'An error occurred during login.',
     };
   }
+  redirect('/')
 }
 
 export async function logout() {
   await deleteSession()
-  redirect('/login')
+  redirect('/')
 }

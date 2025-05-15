@@ -2,6 +2,7 @@
 
 import { login } from '@/app/actions/auth'
 import { useActionState } from 'react'
+import Form from 'next/form'
 
 export default function LoginForm() {
   const [state, action, pending] = useActionState(login, undefined)
@@ -17,7 +18,7 @@ export default function LoginForm() {
         </p>
       </div>
       <div className="flex-1 p-6 rounded-lg ml-8">
-        <form action={action} className="space-y-6">
+        <Form action={action} className="space-y-6">
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
             <input
@@ -53,7 +54,7 @@ export default function LoginForm() {
           >
             Login
           </button>
-        </form>
+        </Form>
       </div>
     </>
   );
