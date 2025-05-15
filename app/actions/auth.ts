@@ -4,6 +4,8 @@ import { SignupFormSchema, LoginFormSchema, FormState } from '@/app/lib/definiti
 import bcrypt from 'bcrypt';
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
+import { createSession, deleteSession } from '@/app/lib/session'
+import { redirect } from 'next/navigation'
 
 
 async function openDB() {
@@ -40,10 +42,13 @@ export async function signup(state: FormState, formData: FormData) {
       [username, email, hashedPassword]
     );
 
-    return {
-      message: 'Account created successfully!',
-      userId: result.lastID
+    if (!result.lastID) {
+      throw new Error('Failed to create user')
     }
+
+    await createSession({ userId: result.lastID, username })
+
+    redirect('/about')
 
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -103,10 +108,9 @@ export async function login(state: FormState, formData: FormData) {
       };
     }
 
-    return {
-      message: 'Login successful!',
-      userId: user.id,
-    };
+    await createSession({ userId: user.id, username: user.username })
+
+    redirect('/profile')
 
   } catch (error: unknown) {
     console.error('Login error:', error);
@@ -114,4 +118,9 @@ export async function login(state: FormState, formData: FormData) {
       message: 'An error occurred during login.',
     };
   }
+}
+
+export async function logout() {
+  await deleteSession()
+  redirect('/login')
 }

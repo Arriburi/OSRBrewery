@@ -1,0 +1,15 @@
+.anchor{
+  anchor-name: "profile-button";
+}
+
+.popover{
+  position: absolute;
+  position-anchor: "profile-button";
+  margin: 0;
+  margin-top: 1rem;
+  inset: auto;
+  top: anchor(bottom);
+  right: anchor(right);
+  transform: translateX(0.5rem);  
+  
+}
