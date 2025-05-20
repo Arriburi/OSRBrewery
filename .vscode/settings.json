@@ -9,5 +9,8 @@
     //ADDED THE BELOW
     "**/.next": true,
     "**/node_modules": true,
-  }
+  },
+  "workbench.colorTheme": "Cursor Dark",
+  "workbench.preferredLightColorTheme": "Default Dark Modern",
+  "workbench.preferredDarkColorTheme": "Cursor Dark Midnight"
 }

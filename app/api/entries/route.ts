@@ -25,10 +25,22 @@ type Article = {
   properties: Properties;
 };
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const author = searchParams.get('author');
+
     const db = await openDB();
-    const entries = await db.all("SELECT * FROM entries ORDER BY date DESC");
+    let query = "SELECT * FROM entries";
+    const params: string[] = [];
+
+    if (author) {
+      query += " WHERE author = ?";
+      params.push(author);
+    }
+
+    query += " ORDER BY date DESC";
+    const entries = await db.all(query, params);
 
     const default_images: Record<ArticleType, string> = {
       "Default": "/default/default-article.svg",

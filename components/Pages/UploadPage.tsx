@@ -1,5 +1,5 @@
-import Boxlist from "../../components/Boxlist";
-import ArticleForm from "../../components/ArticleForm";
+import Boxlist from "@/components/Boxlist";
+import ArticleForm from "@/components/ArticleForm";
 
 
 export default function UploadPage() {

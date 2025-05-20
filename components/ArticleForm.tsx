@@ -121,8 +121,12 @@ export default function ArticleForm() {
         {/* TEXT/DESCRIPTION */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea placeholder="Insert description" rows={6} className="w-full px-3 py-2 bg-primary text-foreground rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
-            {...register("description")} />
+          <textarea
+            placeholder="Insert description"
+            rows={6}
+            className="w-full px-3 py-2 bg-primary text-foreground rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none whitespace-pre-wrap"
+            {...register("description")}
+          />
         </div>
         {/* UPLOAD INPUT */}
         <div className="mb-4">

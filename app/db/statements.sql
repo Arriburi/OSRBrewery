@@ -7,11 +7,10 @@ CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   email TEXT NOT NULL UNIQUE,
   username TEXT NOT NULL UNIQUE,
-  password_hash TEXT NOT NULL 
+  password_hash TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO users (email, username, password_hash)
-VALUES ('alice@example.com', 'alice', '<bcrypt-hash>');
 
 CREATE TABLE IF NOT EXISTS entries (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,7 +21,8 @@ CREATE TABLE IF NOT EXISTS entries (
   imgSrc TEXT NULL, 
   date TEXT NOT NULL, 
   author TEXT NOT NULL,
-  properties JSON NULL -- JSON object for key-value properties
+  properties JSON NULL, -- JSON object for key-value properties
+  FOREIGN KEY (author) REFERENCES users(username)
 );
 
 

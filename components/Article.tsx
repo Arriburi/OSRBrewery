@@ -1,5 +1,7 @@
 import { Properties } from "@/types/data";
 import Image from "next/image";
+import Link from "next/link";
+
 
 interface ArticleProps {
   id: number;
@@ -55,7 +57,7 @@ export default async function Article({ id }: ArticleProps) {
           </div>
         </div>
         <div className="text-right text-sm break-words text-foreground">
-          <p>By {article.author}</p>
+          <p>By <Link href={`/profile/${article.author}`} className="hover:text-accent">{article.author}</Link></p>
           <p>Published on {formattedDate}</p>
         </div>
       </div >
@@ -82,7 +84,7 @@ export default async function Article({ id }: ArticleProps) {
         </div>
       </div>
       <div className="prose max-w-none pb-8">
-        <p>
+        <p className="whitespace-pre-wrap">
           {article.description}
         </p>
       </div>

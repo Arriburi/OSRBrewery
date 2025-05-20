@@ -5,7 +5,6 @@ import { SessionPayload } from "@/app/lib/definitions";
 import { logout } from "@/app/actions/auth";
 
 export default function Navbar({ user }: { user: SessionPayload | null }) {
-  // TODO: Replace with actual auth state
   const isLoggedIn = user ? true : false;
 
 
@@ -28,7 +27,7 @@ export default function Navbar({ user }: { user: SessionPayload | null }) {
       </nav>
 
       {isLoggedIn && (
-        <ProfilePopover />
+        <ProfilePopover user={user} />
       )}
     </div>
   );
@@ -46,7 +45,7 @@ const ProfileButton = () => {
   );
 };
 
-const ProfilePopover = () => {
+const ProfilePopover = ({ user }: { user: SessionPayload | null }) => {
   return (
     <div
       id="profile-menu"
@@ -55,7 +54,7 @@ const ProfilePopover = () => {
     >
       <div className="py-1" role="menu">
         <Link
-          href="/profile"
+          href={`/profile/${user?.username}`}
           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
         >
           View Profile

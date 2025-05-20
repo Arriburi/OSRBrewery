@@ -15,7 +15,7 @@ export default async function Boxlist() {
   const articles = await fetchAllArticles();
 
   const recentArticles = articles.length > 0
-    ? articles.slice(-3).reverse()
+    ? articles.slice(0, 3)
     : [];
 
   return (
