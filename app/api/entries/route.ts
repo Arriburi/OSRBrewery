@@ -4,6 +4,7 @@ import { open } from "sqlite";
 import fs from "fs";
 import path from "path";
 import { ArticleType, Properties } from "@/types/data";
+import { getUser } from "@/app/lib/session";
 
 async function openDB() {
   return open({
@@ -27,7 +28,7 @@ type Article = {
 export async function GET() {
   try {
     const db = await openDB();
-    const entries = await db.all("SELECT * FROM entries");
+    const entries = await db.all("SELECT * FROM entries ORDER BY date DESC");
 
     const default_images: Record<ArticleType, string> = {
       "Default": "/default/default-article.svg",
@@ -59,22 +60,21 @@ export async function GET() {
   }
 }
 
-
 export async function POST(request: Request) {
   try {
     const db = await openDB();
-    const formData = await request.formData(); //this JSON
+    const formData = await request.formData();
+    const user = await getUser();
 
     console.log("The body:", formData);
 
-    const defaultAuthor = "Anonymous";
+    const author = user?.username || "Anonymous";
     const type = formData.get("type") as ArticleType;
     const title = formData.get("title") as string;
     const image = formData.get("imgSrc") as File;
     const description = formData.get("description") as string;
     const properties = formData.get('properties');
     const tags = formData.get("tags");
-
 
     let imagePath: string | null = null;
 
@@ -83,7 +83,6 @@ export async function POST(request: Request) {
       const publicPath = path.join(process.cwd(), "public", "upload");
       const finalPath = path.join(publicPath, tempPath);
       console.log("The final path" + finalPath);
-
 
       const buffer = Buffer.from(await image.arrayBuffer());
       fs.writeFileSync(finalPath, buffer);
@@ -98,7 +97,7 @@ export async function POST(request: Request) {
       type,
       imagePath,
       new Date().toISOString(),
-      defaultAuthor,
+      author,
       properties,
     ];
 

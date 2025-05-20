@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { BsPersonCircle } from "react-icons/bs";
 import styles from "./Navbar.module.css";
@@ -13,11 +12,11 @@ export default function Navbar({ user }: { user: SessionPayload | null }) {
   return (
     <div>
       <nav className="pr-2 flex font-bold items-center space-x-6 text-base leading-5">
-        <Link href="/" className="hover:underline">Home</Link>
+        <Link href="/" className="hover:opacity-80 transition-opacity">Home</Link>
         {isLoggedIn && (
-          <Link href="/upload" className="hover:underline">Upload</Link>
+          <Link href="/upload" className="hover:opacity-80 transition-opacity">Upload</Link>
         )}
-        <Link href="/about" className="hover:underline">About</Link>
+        <Link href="/about" className="hover:opacity-80 transition-opacity">About</Link>
 
         {isLoggedIn ? (
           <ProfileButton />
