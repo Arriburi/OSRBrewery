@@ -1,24 +1,45 @@
 import { BaseArticle } from "@/types/data";
 import Image from "next/image";
 import Link from "next/link";
+import { open } from "sqlite";
+import sqlite3 from "sqlite3";
+import { getImageSrc } from "@/app/lib/defaultImages";
+import { ArticleType } from "@/types/data";
+
+async function openDB() {
+  return open({
+    filename: "./app/db/database.db",
+    driver: sqlite3.Database,
+  });
+}
 
 interface HomeArticleProps {
   article: BaseArticle;
 }
 
-const fetchAllArticles = async (): Promise<BaseArticle[]> => {
+async function getArticles(): Promise<BaseArticle[]> {
   try {
-    const response = await fetch("http://localhost:3000/api/entries");
-    return response.json();
+    const db = await openDB();
+    const entries = await db.all('SELECT * FROM entries ORDER BY date DESC');
+
+    return entries.map((entry): BaseArticle => ({
+      id: Number(entry.id),
+      title: entry.title,
+      description: entry.description,
+      tags: JSON.parse(entry.tags || "[]"),
+      type: entry.type as ArticleType,
+      imgSrc: getImageSrc(entry.imgSrc, entry.type as ArticleType) || undefined,
+      date: new Date(entry.date),
+      author: entry.author,
+      properties: JSON.parse(entry.properties || "{}")
+    }));
   } catch (error) {
     console.error("Error fetching articles:", error);
     return [];
   }
-};
-
+}
 
 function ArticleCard({ article }: HomeArticleProps) {
-
   const image = article.imgSrc as string;
 
   return (
@@ -58,7 +79,7 @@ function ArticleCard({ article }: HomeArticleProps) {
 }
 
 export default async function HomeArticle() {
-  const articles = await fetchAllArticles();
+  const articles = await getArticles();
 
   if (!articles.length) {
     return <div>No articles available.</div>;

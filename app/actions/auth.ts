@@ -38,7 +38,7 @@ export async function signup(state: FormState, formData: FormData) {
     const db = await openDB();
 
     const result = await db.run(
-      `INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)`,
+      `INSERT INTO users (username, email, password_hash, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)`,
       [username, email, hashedPassword]
     );
 
@@ -46,9 +46,7 @@ export async function signup(state: FormState, formData: FormData) {
       throw new Error('Failed to create user')
     }
 
-    await createSession({ userId: result.lastID, username })
-
-    redirect('/about')
+    redirect('/login')
 
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);

@@ -26,6 +26,15 @@ CREATE TABLE IF NOT EXISTS entries (
 );
 
 
+CREATE TABLE IF NOT EXISTS bookmarks (
+  user_id INTEGER NOT NULL,
+  entry_id INTEGER NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id, entry_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (entry_id) REFERENCES entries(id) ON DELETE CASCADE
+);
+
 -- Kobold (Monster)
 INSERT INTO entries (title, description, tags, type, imgSrc, date, author, properties) VALUES (
   "Kobold Marauder",

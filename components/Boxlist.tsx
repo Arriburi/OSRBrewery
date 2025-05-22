@@ -1,3 +1,4 @@
+
 import { BaseArticle } from "@/types/data";
 
 
@@ -11,12 +12,11 @@ const fetchAllArticles = async (): Promise<BaseArticle[]> => {
   }
 };
 
+
+
 export default async function Boxlist() {
   const articles = await fetchAllArticles();
-
-  const recentArticles = articles.length > 0
-    ? articles.slice(0, 3)
-    : [];
+  const recentArticles = articles.slice(0, 8); // Limit to 8 articles
 
   return (
     <div className="bg-primary rounded-md p-4 shadow-lg">

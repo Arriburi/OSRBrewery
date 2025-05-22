@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 
@@ -8,8 +8,8 @@ async function openDB() {
     driver: sqlite3.Database,
   });
 }
-
-export async function GET(request: NextRequest, { params }: { params: { username: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ username: string }> }
+) {
   const { username } = await params;
 
   try {
@@ -26,7 +26,14 @@ export async function GET(request: NextRequest, { params }: { params: { username
       );
     }
 
-    return NextResponse.json(user);
+    console.log("Raw created_at from DB:", user.created_at);
+
+    const formattedUser = {
+      ...user,
+      created_at: user.created_at || new Date().toISOString() // Fallback to current date if null
+    };
+
+    return NextResponse.json(formattedUser);
   } catch (error) {
     console.error("Error fetching user:", error);
     return NextResponse.json(

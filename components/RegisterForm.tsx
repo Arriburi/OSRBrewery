@@ -10,13 +10,18 @@ export default function SignupForm() {
     <>
       {/*p-[20px] to align it to logo*/}
       <div className="flex-1 p-6 rounded-lg flex flex-col justify-between">
-        <h1 className="text-2xl font-semibold">Welcome to OSRBrewery</h1>
-        <p className="text-justify hyphens-auto">OSRBrewery is a hub for tabletop RPG enthusiasts to create, share, and discover homebrew content. It streamlines saving, organizing, and accessing custom monsters, magic items, and more. By gathering homebrew from various sources, OSRBrewery simplifies sharing and bookmarking, fostering a thriving Old School Renaissance community.</p>
-        <p className="flex flex-col items-center text-center">
-          Already have an account?
-          <a href="/login" className="text-white underline">Login here</a>
-        </p>
+        <div className="text-center">
+          <h1 className="text-3xl font-bold mb-2">Welcome to OSRBrewery</h1>
+          <p className="text-justify mt-8 hyphens-auto">
+            OSRBrewery is a hub for tabletop RPG enthusiasts to create, share, and discover homebrew content. It streamlines saving, organizing, and accessing custom monsters, magic items, and more. By gathering homebrew from various sources, OSRBrewery simplifies sharing and bookmarking, fostering a thriving Old School Renaissance community.
+          </p>
+        </div>
+        <div className="text-center mt-auto">
+          <p className="text-foreground/70 mb-2">Already have an account?</p>
+          <a href="/login" className="text-accent hover:underline font-medium">Login here</a>
+        </div>
       </div>
+
       <div className="flex-1 p-6 rounded-lg ml-8">
         <form action={action} className="space-y-6">
           <div className="mb-4">

@@ -1,9 +1,10 @@
-import Boxlist from "../../../components/Boxlist";
-import Article from "../../../components/Article";
+import Boxlist from "@/components/Boxlist";
+import Article from "@/components/Article";
+import { Suspense } from "react";
 
 
 
-export default async function ArticleDisplay({ params }: { params: { article: number } }) {
+export default async function ArticleDisplay({ params }: { params: Promise<{ article: number }> }) {
 
   const id = (await params).article;
   console.log("THE ID OF THIS IS", id);
@@ -18,7 +19,9 @@ export default async function ArticleDisplay({ params }: { params: { article: nu
           </div>
         </div>
         <div className="w-[200px]">
-          <Boxlist />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Boxlist />
+          </Suspense>
           <div className="bg-primary flex rounded-sm my-4 p-4 ">
             Epic box
           </div>

@@ -1,18 +1,52 @@
 import { Properties } from "@/types/data";
 import Image from "next/image";
 import Link from "next/link";
+import { getUser } from "@/app/actions/user";
+import BookmarkButton from "./BookmarkButton";
+import { open } from "sqlite";
+import sqlite3 from "sqlite3";
+import { getUserSession } from "@/app/lib/session";
+import { SessionPayload } from "@/app/lib/definitions";
 
+async function openDB() {
+  return open({
+    filename: "./app/db/database.db",
+    driver: sqlite3.Database,
+  });
+}
 
 interface ArticleProps {
   id: number;
 }
 
 const fetchArticleById = async (id: number) => {
-  const response = await fetch(`http://localhost:3000/api/entries/${id}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch article");
+  try {
+    const db = await openDB();
+    const entry = await db.get("SELECT * FROM entries WHERE id = ?", Number(id));
+
+    if (!entry) {
+      return null;
+    }
+
+    const imgSrc = entry.imgSrc ? `/upload/${entry.imgSrc}` : null;
+
+    const article = {
+      id: entry.id,
+      title: entry.title,
+      description: entry.description,
+      tags: JSON.parse(entry.tags || "[]"),
+      type: entry.type,
+      imgSrc: imgSrc,
+      date: new Date(entry.date).toISOString(),
+      author: entry.author,
+      properties: entry.properties || "{}",
+    };
+
+    return article;
+  } catch (error) {
+    console.error("Error fetching article:", error);
+    return null;
   }
-  return response.json();
 };
 
 const formatDate = (isoString: string): string => {
@@ -25,16 +59,16 @@ const formatDate = (isoString: string): string => {
 };
 
 
-
 export default async function Article({ id }: ArticleProps) {
 
   const article = await fetchArticleById(id);
+  const userSession = await getUserSession() as SessionPayload;
+  const user = await getUser(userSession?.userId);
   console.log("ACI", article);
-  console.log(article.imgSrc);
-
-  if (article == null) {
+  if (!article) {
     return <div>Loading...</div>
   }
+  console.log(article.imgSrc);
 
   const formattedDate = formatDate(article.date);
 
@@ -47,7 +81,10 @@ export default async function Article({ id }: ArticleProps) {
     <div className="container mx-auto px-4">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-4xl pb-2 font-bold text-foreground break-words">{article.title} </h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-4xl pb-2 font-bold text-foreground break-words">{article.title}</h1>
+            {user && <BookmarkButton articleId={id} />}
+          </div>
           <div className="flex flex-wrap max-w-[450px]">
             {article.tags.map((tag: string) => (
               <span key={tag} className="px-3 py-1 mb-1 rounded bg-accent text-black mr-2">
@@ -60,7 +97,7 @@ export default async function Article({ id }: ArticleProps) {
           <p>By <Link href={`/profile/${article.author}`} className="hover:text-accent">{article.author}</Link></p>
           <p>Published on {formattedDate}</p>
         </div>
-      </div >
+      </div>
       {article.imgSrc && (
         <Image
           src={article.imgSrc}

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 
@@ -9,8 +9,11 @@ async function openDB() {
   });
 }
 
-export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
-  const { id } = await params;
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params
+
+  console.log("THE ID OF THIS IS", id);
 
   try {
     const db = await openDB();

@@ -3,13 +3,15 @@ import { decrypt } from '@/app/lib/session'
 import { cookies } from 'next/headers'
 
 // 1. Specify protected and public routes
-const protectedRoutes = ['/upload']
+const protectedRoutes = ['/upload', '/profile']
 const publicRoutes = ['/login', '/register', '/', '/about']
 
 export default async function middleware(req: NextRequest) {
   // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
+  //const isProtectedRoute = protectedRoutes.includes(path)
+  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route)) //-> redirecting to login if profile/something
+
   const isPublicRoute = publicRoutes.includes(path)
 
   // 3. Decrypt the session from the cookie

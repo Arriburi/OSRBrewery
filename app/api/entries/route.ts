@@ -3,8 +3,11 @@ import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import fs from "fs";
 import path from "path";
-import { ArticleType, Properties } from "@/types/data";
-import { getUser } from "@/app/lib/session";
+import { ArticleType, BaseArticle } from "@/types/data";
+import { getUser } from "@/app/actions/user";
+import { getImageSrc } from "@/app/lib/defaultImages";
+import { getUserSession } from "@/app/lib/session";
+import { SessionPayload } from "@/app/lib/definitions";
 
 async function openDB() {
   return open({
@@ -13,56 +16,21 @@ async function openDB() {
   });
 }
 
-type Article = {
-  id: string;
-  title: string;
-  description: string;
-  tags: string[];
-  type: string;
-  imgSrc: string | null;
-  date: Date;
-  author: string;
-  properties: Properties;
-};
-
-export async function GET(request: Request) {
+export async function GET(): Promise<NextResponse<BaseArticle[] | { error: string }>> {
   try {
-    const { searchParams } = new URL(request.url);
-    const author = searchParams.get('author');
-
     const db = await openDB();
-    let query = "SELECT * FROM entries";
-    const params: string[] = [];
+    const entries = await db.all('SELECT * FROM entries');
 
-    if (author) {
-      query += " WHERE author = ?";
-      params.push(author);
-    }
-
-    query += " ORDER BY date DESC";
-    const entries = await db.all(query, params);
-
-    const default_images: Record<ArticleType, string> = {
-      "Default": "/default/default-article.svg",
-      "Spell": "/default/default-spell.svg",
-      "Monster": "/default/default-monster.svg",
-      "Adventure": "/default/default-adventure.svg",
-      "Map": "/default/default-map.svg",
-      "Magic Item": "/default/default-magic-item.svg",
-      "Encounter": "/default/default-encounter.svg",
-      "Other": "/default/default-other.svg"
-    };
-
-    const articles = entries.map((entry): Article => ({
-      id: entry.id.toString(),
+    const articles = entries.map((entry): BaseArticle => ({
+      id: Number(entry.id),
       title: entry.title,
       description: entry.description,
       tags: JSON.parse(entry.tags || "[]"),
-      type: entry.type,
-      imgSrc: entry.imgSrc ? `/upload/${entry.imgSrc}` : default_images[entry.type as ArticleType],
+      type: entry.type as ArticleType,
+      imgSrc: getImageSrc(entry.imgSrc, entry.type as ArticleType) || undefined,
       date: new Date(entry.date),
       author: entry.author,
-      properties: entry.properties || "{}"
+      properties: JSON.parse(entry.properties || "{}")
     }));
 
     return NextResponse.json(articles);
@@ -76,21 +44,33 @@ export async function POST(request: Request) {
   try {
     const db = await openDB();
     const formData = await request.formData();
-    const user = await getUser();
+    const userSession = await getUserSession() as SessionPayload;
 
     console.log("The body:", formData);
 
-    const author = user?.username || "Anonymous";
+    const user = await getUser(userSession.userId);
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
     const type = formData.get("type") as ArticleType;
     const title = formData.get("title") as string;
     const image = formData.get("imgSrc") as File;
     const description = formData.get("description") as string;
-    const properties = formData.get('properties');
-    const tags = formData.get("tags");
+    const properties = formData.get('properties') as string;
+    const tags = formData.get("tags") as string;
+
+    // Validate required fields
+    if (!title || !description || !type) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
 
     let imagePath: string | null = null;
 
-    if (image !== null) {
+    if (image && image.size > 0) {
       const tempPath = image.name;
       const publicPath = path.join(process.cwd(), "public", "upload");
       const finalPath = path.join(publicPath, tempPath);
@@ -105,22 +85,27 @@ export async function POST(request: Request) {
     const values = [
       title,
       description,
-      tags,
+      tags || "[]",
       type,
       imagePath,
       new Date().toISOString(),
-      author,
-      properties,
+      user.username,
+      properties || "{}",
     ];
 
-    await db.run(query, values)
+    const result = await db.run(query, values);
 
-    return Response.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      articleId: result.lastID
+    });
   } catch (error) {
     console.error("Error saving entry:", error);
-    return Response.json({ error: "Failed to save entry" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to save entry" },
+      { status: 500 }
+    );
   }
-
 }
 
 

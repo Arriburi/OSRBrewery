@@ -47,7 +47,7 @@ export default function AboutPage() {
           <div className="flex justify-center">
             <Link
               href="/register"
-              className="text-white hover:underline text-lg font-semibold transition-all"
+              className="text-accent hover:underline text-lg font-semibold"
             >
               Join us!
             </Link>

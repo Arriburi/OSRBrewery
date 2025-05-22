@@ -14,6 +14,7 @@ export async function encrypt(payload: SessionPayload) {
     .sign(encodedKey)
 }
 
+
 export async function decrypt(session: string | undefined = '') {
   if (!session) return null;
   try {
@@ -34,23 +35,32 @@ export async function createSession(payload: SessionPayload) {
 
   cookieStore.set('session', session, {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === 'production',
     expires: expiresAt,
     sameSite: 'lax',
     path: '/',
   })
 }
 
-export const verifySession = async () => {
+export const verifySession = async (): Promise<SessionPayload | null> => {
+  //const cookie1 = (await cookies());
+  //console.log('Cookie1:', cookie1);
   const cookie = (await cookies()).get('session')?.value
   const session = await decrypt(cookie)
-  return session;
+  const sessionPayload: SessionPayload = {
+    userId: session?.userId as number,
+    username: session?.username as string,
+
+  }
+  return sessionPayload;
 }
 
-export const getUser = async () => {
+
+export const getUserSession = async (): Promise<SessionPayload | null> => {
   const session = await verifySession()
   if (!session) return null
-  return session as SessionPayload;
+  console.log('getUser result:', session ? 'user found' : 'no user')
+  return session;
 }
 
 export async function updateSession() {
@@ -66,7 +76,7 @@ export async function updateSession() {
   const cookieStore = await cookies()
   cookieStore.set('session', session, {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === 'production',
     expires: expires,
     sameSite: 'lax',
     path: '/',

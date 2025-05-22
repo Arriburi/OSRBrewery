@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { BsPersonCircle } from "react-icons/bs";
 import styles from "./Navbar.module.css";
-import { SessionPayload } from "@/app/lib/definitions";
+import { User } from "@/app/lib/definitions";
 import { logout } from "@/app/actions/auth";
 
-export default function Navbar({ user }: { user: SessionPayload | null }) {
+export default function Navbar({ user }: { user: User | null }) {
   const isLoggedIn = user ? true : false;
 
 
@@ -45,7 +45,7 @@ const ProfileButton = () => {
   );
 };
 
-const ProfilePopover = ({ user }: { user: SessionPayload | null }) => {
+const ProfilePopover = ({ user }: { user: User | null }) => {
   return (
     <div
       id="profile-menu"

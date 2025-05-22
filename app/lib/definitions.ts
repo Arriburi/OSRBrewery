@@ -41,3 +41,11 @@ export type SessionPayload = {
   userId: number
   username: string
 }
+
+export type User = {
+  id: number
+  username: string
+  email: string
+  created_at: string
+}
+

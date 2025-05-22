@@ -4,8 +4,9 @@ import "./globals.css";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
-import { getUser } from "@/app/lib/session";
-import { SessionPayload } from "./lib/definitions";
+import { getUser } from "@/app/actions/user";
+import { SessionPayload, User } from "./lib/definitions";
+import { getUserSession } from "./lib/session";
 
 
 
@@ -30,7 +31,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user: SessionPayload | null = await getUser();
+  const userSession = await getUserSession() as SessionPayload;
+  const user: User | null = await getUser(userSession?.userId);
   return (
     <html lang="en">
       <body
@@ -40,7 +42,7 @@ export default async function RootLayout({
         <div className="relative min-h-screen bg-inherit text-foreground mx-auto max-w-screen-lg px-4">
           <div className=" flex flex-col justify-between">
             <header className="flex items-center justify-between py-10">
-              <Link href="#">
+              <Link href="/">
                 <div className="flex text-4xl font-bold">
                   <Image
                     src="/dungeon.svg"
