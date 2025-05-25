@@ -1,4 +1,8 @@
-export default function TrendingBox() {
+import { Suspense } from "react";
+import LoadingSpinner from "./LoadingSpinner";
+
+async function TrendingBoxContent() {
+  // In the future, this could fetch trending topics from an API
   return (
     <div className="bg-primary rounded-sm p-4">
       <h3 className="font-bold mb-2">Trending Topics</h3>
@@ -8,5 +12,13 @@ export default function TrendingBox() {
         <span className="text-xs px-2 py-1 bg-accent rounded">Tag3</span>
       </div>
     </div>
+  );
+}
+
+export default function TrendingBox() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <TrendingBoxContent />
+    </Suspense>
   );
 } 

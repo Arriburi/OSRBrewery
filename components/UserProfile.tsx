@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getUser } from "@/app/actions/user";
-import { getBookmarks } from "@/app/actions/bookmarks";
 import { getArticlesForUser } from "@/app/actions/articles";
 import { getUserSession } from "@/app/lib/session";
 import { SessionPayload } from "@/app/lib/definitions";
+import { getBookmarks } from "@/app/actions/bookmarks";
+import { Article } from "@/app/actions/articles";
 
 const formatDate = (isoString: string): string => {
   const date = new Date(isoString);
@@ -84,7 +85,7 @@ export default async function UserProfile({ userid }: { userid: number }) {
             <p>No bookmarked articles yet.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {bookmarks.map((article) => (
+              {bookmarks.map((article: Article) => (
                 <Link href={`/articles/${article.id}`} key={article.id} className="block h-full">
                   <div className="bg-background p-4 rounded-lg shadow hover:shadow-md transition-shadow h-full">
                     <div className="flex flex-col h-full">

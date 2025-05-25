@@ -10,6 +10,7 @@ import BoxFromAdmin from "@/components/BoxFromAdmin";
 import TrendingBox from "@/components/TrendingBox";
 import CommunityBox from "@/components/CommunityBox";
 import RelatedArticlesBox from "@/components/RelatedArticlesBox";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default async function ArticleDisplay({ params }: { params: Promise<{ article: number }> }) {
   const id = (await params).article;
@@ -22,7 +23,7 @@ export default async function ArticleDisplay({ params }: { params: Promise<{ art
         <div className="flex-1">
           <div className="rounded-md shadow-md bg-primary p-[20px] mr-4 py-8">
             <div className="container mx-auto px-4">
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingSpinner />}>
                 <Article id={id} />
               </Suspense>
             </div>
@@ -30,7 +31,7 @@ export default async function ArticleDisplay({ params }: { params: Promise<{ art
         </div>
 
         <div className="w-[200px] flex flex-col gap-4">
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <Boxlist />
           </Suspense>
           <RelatedArticlesBox />
@@ -43,7 +44,7 @@ export default async function ArticleDisplay({ params }: { params: Promise<{ art
       <div className="mt-8">
         <div className="rounded-md shadow-md bg-primary p-[20px]">
           <div className="container mx-auto px-4">
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingSpinner />}>
               {<Comments articleId={id} user={user} />}
             </Suspense>
           </div>

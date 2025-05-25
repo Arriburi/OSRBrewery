@@ -1,6 +1,8 @@
 import { getAllArticles } from "@/app/actions/articles";
+import { Suspense } from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
-export default async function Boxlist() {
+async function BoxlistContent() {
   const articles = await getAllArticles();
   const recentArticles = articles.slice(0, 8);
 
@@ -23,5 +25,13 @@ export default async function Boxlist() {
         )}
       </ul>
     </div>
+  );
+}
+
+export default function Boxlist() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <BoxlistContent />
+    </Suspense>
   );
 }

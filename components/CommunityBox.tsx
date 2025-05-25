@@ -1,11 +1,10 @@
 import { getAllArticles } from "@/app/actions/articles";
+import { Suspense } from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
-
-export default async function CommunityBox() {
+async function CommunityBoxContent() {
   const articles = await getAllArticles();
   const articleCount = articles.length;
-
-
 
   return (
     <div className="bg-primary rounded-sm p-4">
@@ -16,5 +15,13 @@ export default async function CommunityBox() {
         <div>Number of articles: {articleCount}</div>
       </div>
     </div>
+  );
+}
+
+export default function CommunityBox() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <CommunityBoxContent />
+    </Suspense>
   );
 } 

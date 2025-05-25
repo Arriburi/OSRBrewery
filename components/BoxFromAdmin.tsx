@@ -1,10 +1,12 @@
 import { getArticleById } from "@/app/actions/article";
+import { Suspense } from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface BoxFromAdminProps {
   articleId: number;
 }
 
-export default async function BoxFromAdmin({ articleId }: BoxFromAdminProps) {
+async function BoxFromAdminContent({ articleId }: BoxFromAdminProps) {
   const article = await getArticleById(articleId);
 
   if (!article) return null;
@@ -18,5 +20,13 @@ export default async function BoxFromAdmin({ articleId }: BoxFromAdminProps) {
         <div className="text-sm hover:text-accent cursor-pointer">Article 3</div>
       </div>
     </div>
+  );
+}
+
+export default function BoxFromAdmin(props: BoxFromAdminProps) {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <BoxFromAdminContent {...props} />
+    </Suspense>
   );
 } 
