@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 
 export type Comment = {
   id: number;
+  article_id: number;
   content: string;
   created_at: string;
   user: {
@@ -17,9 +18,12 @@ export async function getComments(articleId: number): Promise<Comment[]> {
     .from('comments')
     .select(`
       id,
+      article_id,
       content,
       created_at,
-      users!inner(username)
+      users (
+        username
+      )
     `)
     .eq('article_id', articleId)
     .order('created_at', { ascending: false });
@@ -29,12 +33,13 @@ export async function getComments(articleId: number): Promise<Comment[]> {
     return [];
   }
 
-  return (data || []).map(comment => ({
+  return (data || []).map((comment: any) => ({
     id: comment.id,
+    article_id: comment.article_id,
     content: comment.content,
     created_at: comment.created_at,
     user: {
-      username: comment.users[0]?.username || 'Unknown User'
+      username: comment.users.username || 'Unknown User'
     }
   }));
 }
