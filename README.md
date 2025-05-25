@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OSRBrewery
 
-## Getting Started
+A platform dedicated to preserving and celebrating the rich tradition of tabletop roleplaying games. Built for the Faculty of Mathematics, Natural Sciences and Information Technologies (UP FAMNIT) as part of the Systems 3 - Information Systems course.
 
-First, run the development server:
+## Live Demo
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Visit the live application at: [https://osr-brewery.vercel.app/](https://osr-brewery.vercel.app/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## About
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+OSRBrewery provides a platform for creators to share their homebrew content and for players to discover new adventures, spells, monsters, and more.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Technologies Used
 
-## Learn More
+- **Frontend Framework**: Next.js with React
+- **Language**: TypeScript
+- **Database**: Supabase
+- **Deployment**: Vercel
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project was built using modern web development practices and technologies, focusing on:
+- Server-side rendering with Next.js
+- Type safety with TypeScript
+- Real-time database operations with Supabase
+- Responsive design with Tailwind CSS
+- Modern React patterns and hooks
 
-## Deploy on Vercel
+## Credits
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project was created by Arrighetti Luca as part of the Systems 3 - Information Systems course at UP FAMNIT.

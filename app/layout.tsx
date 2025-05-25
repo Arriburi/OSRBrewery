@@ -7,8 +7,8 @@ import Image from "next/image";
 import { getUser } from "@/app/actions/user";
 import { SessionPayload, User } from "./lib/definitions";
 import { getUserSession } from "./lib/session";
-
-
+import { Suspense } from "react";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -58,7 +58,9 @@ export default async function RootLayout({
             </header>
 
             {/* Main page content */}
-            {children}
+            <Suspense fallback={<LoadingSpinner />}>
+              {children}
+            </Suspense>
           </div>
         </div>
         <footer className="text-foreground flex justify-center my-3 space-x-2 text-sm">
