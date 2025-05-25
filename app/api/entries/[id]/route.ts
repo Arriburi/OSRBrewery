@@ -1,13 +1,5 @@
 import { NextResponse } from "next/server";
-import sqlite3 from "sqlite3";
-import { open } from "sqlite";
-
-async function openDB() {
-  return open({
-    filename: "./app/db/database.db",
-    driver: sqlite3.Database,
-  });
-}
+import { supabase } from "@/app/lib/supabase";
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }
 ) {
@@ -16,10 +8,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   console.log("THE ID OF THIS IS", id);
 
   try {
-    const db = await openDB();
-    const entry = await db.get("SELECT * FROM entries WHERE id = ?", Number(id));
+    const { data: entry, error } = await supabase
+      .from('entries')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-    if (!entry) {
+    if (error || !entry) {
       return NextResponse.json({ error: "Entry not found", id }, { status: 404 });
     }
 

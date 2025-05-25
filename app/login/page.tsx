@@ -1,5 +1,5 @@
 import LoginPage from "@/components/Pages/LoginPage";
 
-export default function Register() {
+export default function Login() {
   return <LoginPage />
 }

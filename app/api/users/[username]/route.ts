@@ -1,23 +1,24 @@
 import { NextResponse } from "next/server";
-import sqlite3 from "sqlite3";
-import { open } from "sqlite";
+import { supabase } from '@/app/lib/supabase';
 
-async function openDB() {
-  return open({
-    filename: "./app/db/database.db",
-    driver: sqlite3.Database,
-  });
-}
 export async function GET(request: Request, { params }: { params: Promise<{ username: string }> }
 ) {
   const { username } = await params;
 
   try {
-    const db = await openDB();
-    const user = await db.get(
-      "SELECT id, username, email, created_at FROM users WHERE username = ?",
-      username
-    );
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('id, username, email, created_at')
+      .eq('username', username)
+      .single();
+
+    if (error) {
+      console.error("Error fetching user:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch user" },
+        { status: 500 }
+      );
+    }
 
     if (!user) {
       return NextResponse.json(

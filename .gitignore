@@ -37,6 +37,13 @@ yarn-error.log*
 
 # vercel
 .vercel
+.vercel/output
+
+# supabase
+.supabase/
+**/supabase/.temp/
+**/supabase/.branches/
+**/supabase/.temp/
 
 # typescript
 *.tsbuildinfo

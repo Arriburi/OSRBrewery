@@ -1,18 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getUserSession } from '@/app/lib/session';
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
 import { getImageSrc } from '@/app/lib/defaultImages';
 import { SessionPayload } from '@/app/lib/definitions';
+import { supabase } from "@/app/lib/supabase";
 
-async function openDB() {
-  return open({
-    filename: './app/db/database.db',
-    driver: sqlite3.Database,
-  });
-}
-
-// GET: Get bookmarks for a specific user
 export async function GET() {
   const userSession = await getUserSession() as SessionPayload;
   console.log(userSession);
@@ -20,21 +11,37 @@ export async function GET() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   try {
-    const db = await openDB();
-    const bookmarks = await db.all(`
-    SELECT e.* 
-    FROM bookmarks b 
-    JOIN entries e ON b.entry_id = e.id 
-    JOIN users u ON b.user_id = u.id
-    WHERE u.id = ?
-    ORDER BY e.date DESC    
-  `, [userSession.userId]);
+    const { data: bookmarks, error } = await supabase
+      .from('bookmarks')
+      .select(`
+        entries (
+          id,
+          title,
+          description,
+          tags,
+          type,
+          imgSrc,
+          date,
+          author,
+          properties
+        )
+      `)
+      .eq('user_id', userSession.userId)
+      .order('created_at', { ascending: false });
 
-    const formattedBookmarks = bookmarks.map(bookmark => ({
-      ...bookmark,
-      imgSrc: getImageSrc(bookmark.imgSrc, bookmark.type),
-      tags: JSON.parse(bookmark.tags || "[]")
-    }));
+    if (error) throw error;
+
+    const formattedBookmarks = bookmarks
+      .map(bookmark => {
+        const entry = Array.isArray(bookmark.entries) ? bookmark.entries[0] : bookmark.entries;
+        if (!entry) return null;
+        return {
+          ...entry,
+          imgSrc: getImageSrc(entry.imgSrc, entry.type),
+          tags: JSON.parse(entry.tags || "[]")
+        };
+      })
+      .filter(Boolean);
 
     return NextResponse.json(formattedBookmarks);
   } catch (error) {
@@ -43,7 +50,6 @@ export async function GET() {
   }
 }
 
-// POST: Add bookmark for current user
 export async function POST(request: Request) {
   const userSession = await getUserSession() as SessionPayload;
   if (!userSession) {
@@ -55,12 +61,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Entry ID is required' }, { status: 400 });
   }
 
-  const db = await openDB();
-  await db.run('INSERT INTO bookmarks (user_id, entry_id) VALUES (?, ?)', [userSession.userId, entryId]);
+  const { error } = await supabase
+    .from('bookmarks')
+    .insert([
+      { user_id: userSession.userId, entry_id: entryId }
+    ]);
+
+  if (error) {
+    return NextResponse.json({ error: 'Failed to add bookmark' }, { status: 500 });
+  }
+
   return NextResponse.json({ success: true });
 }
 
-// DELETE: Remove bookmark for current user
 export async function DELETE(request: Request) {
   const userSession = await getUserSession() as SessionPayload;
   if (!userSession) {
@@ -72,7 +85,15 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: 'Entry ID is required' }, { status: 400 });
   }
 
-  const db = await openDB();
-  await db.run('DELETE FROM bookmarks WHERE user_id = ? AND entry_id = ?', [userSession.userId, entryId]);
+  const { error } = await supabase
+    .from('bookmarks')
+    .delete()
+    .eq('user_id', userSession.userId)
+    .eq('entry_id', entryId);
+
+  if (error) {
+    return NextResponse.json({ error: 'Failed to remove bookmark' }, { status: 500 });
+  }
+
   return NextResponse.json({ success: true });
 } 

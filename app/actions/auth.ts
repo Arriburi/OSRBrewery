@@ -2,21 +2,12 @@
 
 import { SignupFormSchema, LoginFormSchema, FormState } from '@/app/lib/definitions'
 import bcrypt from 'bcrypt';
-import sqlite3 from "sqlite3";
-import { open } from "sqlite";
 import { createSession, deleteSession } from '@/app/lib/session'
 import { redirect } from 'next/navigation'
-
-
-async function openDB() {
-  return open({
-    filename: "./app/db/database.db",
-    driver: sqlite3.Database,
-  });
-}
+import { supabase } from '../lib/supabase'
 
 export async function signup(state: FormState, formData: FormData) {
-
+  console.log('Signup attempt:', formData.get('email'));
   const validatedFields = SignupFormSchema.safeParse({
     username: formData.get('username'),
     email: formData.get('email'),
@@ -25,6 +16,7 @@ export async function signup(state: FormState, formData: FormData) {
   })
 
   if (!validatedFields.success) {
+    console.log('Signup validation failed:', validatedFields.error);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
     }
@@ -32,93 +24,104 @@ export async function signup(state: FormState, formData: FormData) {
 
   try {
     const { username, email, password } = validatedFields.data
-
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const db = await openDB();
+    const { data, error } = await supabase
+      .from('users')
+      .insert({
+        username,
+        email,
+        password_hash: hashedPassword,
+      })
+      .select()
+      .single()
 
-    const result = await db.run(
-      `INSERT INTO users (username, email, password_hash, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)`,
-      [username, email, hashedPassword]
-    );
-
-    if (!result.lastID) {
-      throw new Error('Failed to create user')
+    if (error) {
+      console.log('Signup error:', error);
+      if (error.code === '23505') { // Unique violation
+        if (error.message.includes('email')) {
+          return {
+            errors: {
+              email: ['This email is already in use']
+            }
+          }
+        }
+        if (error.message.includes('username')) {
+          return {
+            errors: {
+              username: ['This username is already taken']
+            }
+          }
+        }
+      }
+      throw error
     }
 
+    console.log('Signup successful for:', email);
     redirect('/login')
-
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-
-    if (errorMessage.includes('UNIQUE constraint failed')) {
-      if (errorMessage.includes('email')) {
-        return {
-          errors: {
-            email: ['This email is already in use']
-          }
-        }
-      }
-      if (errorMessage.includes('username')) {
-        return {
-          errors: {
-            username: ['This username is already taken']
-          }
-        }
-      }
+    console.log('Signup exception:', error);
+    return {
+      message: 'An error occurred during signup'
     }
   }
 }
 
 export async function login(state: FormState, formData: FormData) {
+  console.log('Login attempt:', formData.get('email'));
   const validatedFields = LoginFormSchema.safeParse({
     email: formData.get('email'),
     password: formData.get('password'),
-  });
+  })
+
   if (!validatedFields.success) {
+    console.log('Login validation failed:', validatedFields.error);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-    };
+    }
   }
-
-  const { email, password } = validatedFields.data;
-
 
   try {
-    const db = await openDB();
+    const { email, password } = validatedFields.data
 
-    const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single()
 
-    if (!user) {
+    if (error || !user) {
+      console.log('User not found or error:', error);
       return {
-        errors: {
-          email: ['No account found with this email'],
-        },
-      };
+        message: 'Invalid email or password'
+      }
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password_hash);
-
+    const passwordMatch = await bcrypt.compare(password, user.password_hash)
     if (!passwordMatch) {
+      console.log('Password mismatch for:', email);
       return {
-        errors: {
-          password: ['Incorrect password'],
-        },
-      };
+        message: 'Invalid email or password'
+      }
     }
 
-    await createSession({ userId: user.id, username: user.username })
+    console.log('Login successful for:', email);
+    await createSession({
+      userId: user.id,
+      username: user.username,
+    })
 
-  } catch (error: unknown) {
-    console.error('Login error:', error);
+    redirect('/')
+  } catch (error) {
+    console.log('Login exception:', error);
     return {
-      message: 'An error occurred during login.',
-    };
+      message: 'An error occurred during login'
+    }
   }
-  redirect('/')
 }
 
 export async function logout() {
+  console.log('Logout attempt');
   await deleteSession()
-  redirect('/')
+  redirect('/login')
 }

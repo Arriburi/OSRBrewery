@@ -3,6 +3,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { SpellKeys, MonsterKeys, MonsterKeysType, SpellKeysType, ArticleType, Properties } from '../types/data';
 import TagInput from "./TagInput";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 type Inputs = {
   title: string;
@@ -25,6 +26,7 @@ function getKeysByType(inputType: string): MonsterKeysType[] | SpellKeysType[] {
 
 
 export default function ArticleForm() {
+  const router = useRouter();
   const {
     control,
     register,
@@ -33,8 +35,7 @@ export default function ArticleForm() {
     watch,
     setValue
   } = useForm<Inputs>()
-  const onSubmit: SubmitHandler<Inputs> = async (data) => { // console.log("Form data:", data);
-
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const formData = new FormData();
 
     if (data.properties !== undefined) {
@@ -51,9 +52,6 @@ export default function ArticleForm() {
     formData.append("tags", JSON.stringify(data.tags));
     formData.append("type", data.type);
 
-
-    console.log(data.properties)
-
     if (data.imgSrc?.[0]) {
       formData.append("imgSrc", data.imgSrc[0]);
     }
@@ -66,15 +64,19 @@ export default function ArticleForm() {
         body: formData,
       });
 
+      const responseData = await response.json();
+
       if (response.ok) {
-        const result = await response.json();
-        console.log("Entry saved successfully:", result);
-        console.log("Form data:", data);
+        console.log("Entry saved successfully:", responseData);
+        router.push('/');
       } else {
-        console.error("Failed to save entry:", await response.text());
+        console.error("Failed to save entry:", responseData.error);
+        alert('Failed to save entry');
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      alert('Error submitting form');
+
     }
   };
 

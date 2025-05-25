@@ -61,7 +61,7 @@ export default async function UserProfile({ userid }: { userid: number }) {
                           src={article.imgSrc}
                           alt={article.title}
                           fill
-                          className="object-cover rounded"
+                          className="object-cover rounded bg-orange-50"
                         />
                       </div>
                     )}
@@ -94,7 +94,7 @@ export default async function UserProfile({ userid }: { userid: number }) {
                             src={article.imgSrc}
                             alt={article.title}
                             fill
-                            className="object-cover rounded"
+                            className="object-cover rounded bg-orange-50"
                           />
                         </div>
                       )}

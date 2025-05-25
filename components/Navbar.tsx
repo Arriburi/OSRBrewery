@@ -1,3 +1,5 @@
+'use client'
+
 import Link from "next/link";
 import { BsPersonCircle } from "react-icons/bs";
 import styles from "./Navbar.module.css";
@@ -6,7 +8,6 @@ import { logout } from "@/app/actions/auth";
 
 export default function Navbar({ user }: { user: User | null }) {
   const isLoggedIn = user ? true : false;
-
 
   return (
     <div>

@@ -1,17 +1,9 @@
 import { BaseArticle } from "@/types/data";
 import Image from "next/image";
 import Link from "next/link";
-import { open } from "sqlite";
-import sqlite3 from "sqlite3";
 import { getImageSrc } from "@/app/lib/defaultImages";
 import { ArticleType } from "@/types/data";
-
-async function openDB() {
-  return open({
-    filename: "./app/db/database.db",
-    driver: sqlite3.Database,
-  });
-}
+import { supabase } from "@/app/lib/supabase";
 
 interface HomeArticleProps {
   article: BaseArticle;
@@ -19,8 +11,12 @@ interface HomeArticleProps {
 
 async function getArticles(): Promise<BaseArticle[]> {
   try {
-    const db = await openDB();
-    const entries = await db.all('SELECT * FROM entries ORDER BY date DESC');
+    const { data: entries, error } = await supabase
+      .from('entries')
+      .select('*')
+      .order('date', { ascending: false });
+
+    if (error) throw error;
 
     return entries.map((entry): BaseArticle => ({
       id: Number(entry.id),

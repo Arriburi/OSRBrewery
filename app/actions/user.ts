@@ -1,19 +1,14 @@
 import { User } from "../lib/definitions";
-import { open } from "sqlite";
-import sqlite3 from "sqlite3";
-
-async function openDB() {
-  return open({
-    filename: "./app/db/database.db",
-    driver: sqlite3.Database,
-  });
-}
+import { supabase } from "../lib/supabase";
 
 export const getUser = async (userId: number): Promise<User | null> => {
-  const db = await openDB()
-  const userdb = await db.get('SELECT * FROM users WHERE id = ?', userId)
+  const { data: userdb, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('id', userId)
+    .single();
 
-  if (!userdb) {
+  if (error || !userdb) {
     return null;
   }
 

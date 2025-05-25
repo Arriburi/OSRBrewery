@@ -3,17 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { getUser } from "@/app/actions/user";
 import BookmarkButton from "./BookmarkButton";
-import { open } from "sqlite";
-import sqlite3 from "sqlite3";
 import { getUserSession } from "@/app/lib/session";
 import { SessionPayload } from "@/app/lib/definitions";
-
-async function openDB() {
-  return open({
-    filename: "./app/db/database.db",
-    driver: sqlite3.Database,
-  });
-}
+import { supabase } from "@/app/lib/supabase";
 
 interface ArticleProps {
   id: number;
@@ -21,10 +13,13 @@ interface ArticleProps {
 
 const fetchArticleById = async (id: number) => {
   try {
-    const db = await openDB();
-    const entry = await db.get("SELECT * FROM entries WHERE id = ?", Number(id));
+    const { data: entry, error } = await supabase
+      .from('entries')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-    if (!entry) {
+    if (error || !entry) {
       return null;
     }
 
@@ -66,9 +61,13 @@ export default async function Article({ id }: ArticleProps) {
   const user = await getUser(userSession?.userId);
   console.log("ACI", article);
   if (!article) {
-    return <div>Loading...</div>
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold text-foreground">Article Not Found</h1>
+        <p className="mt-4 text-foreground">The article you're looking for doesn't exist.</p>
+      </div>
+    );
   }
-  console.log(article.imgSrc);
 
   const formattedDate = formatDate(article.date);
 

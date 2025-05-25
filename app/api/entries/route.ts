@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import sqlite3 from "sqlite3";
-import { open } from "sqlite";
 import fs from "fs";
 import path from "path";
 import { ArticleType, BaseArticle } from "@/types/data";
@@ -8,45 +6,38 @@ import { getUser } from "@/app/actions/user";
 import { getImageSrc } from "@/app/lib/defaultImages";
 import { getUserSession } from "@/app/lib/session";
 import { SessionPayload } from "@/app/lib/definitions";
+import { supabase } from "@/app/lib/supabase";
 
-async function openDB() {
-  return open({
-    filename: "./app/db/database.db",
-    driver: sqlite3.Database,
-  });
-}
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
-export async function GET(): Promise<NextResponse<BaseArticle[] | { error: string }>> {
+export async function GET() {
   try {
-    const db = await openDB();
-    const entries = await db.all('SELECT * FROM entries');
+    const { data: entries, error } = await supabase
+      .from('entries')
+      .select('*')
+      .order('date', { ascending: false });
 
-    const articles = entries.map((entry): BaseArticle => ({
-      id: Number(entry.id),
-      title: entry.title,
-      description: entry.description,
-      tags: JSON.parse(entry.tags || "[]"),
-      type: entry.type as ArticleType,
-      imgSrc: getImageSrc(entry.imgSrc, entry.type as ArticleType) || undefined,
-      date: new Date(entry.date),
-      author: entry.author,
-      properties: JSON.parse(entry.properties || "{}")
-    }));
+    if (error) {
+      console.error("Supabase error:", error);
+      throw error;
+    }
 
-    return NextResponse.json(articles);
+    return NextResponse.json(entries);
   } catch (error) {
-    console.error("Error fetching articles:", error);
-    return NextResponse.json({ error: "Failed to fetch articles" }, { status: 500 });
+    console.error("Error in GET /api/entries:", error);
+    return NextResponse.json({ error: "Failed to fetch entries" }, { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const db = await openDB();
     const formData = await request.formData();
     const userSession = await getUserSession() as SessionPayload;
 
-    console.log("The body:", formData);
+    if (!userSession) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
 
     const user = await getUser(userSession.userId);
     if (!user) {
@@ -74,35 +65,44 @@ export async function POST(request: Request) {
       const tempPath = image.name;
       const publicPath = path.join(process.cwd(), "public", "upload");
       const finalPath = path.join(publicPath, tempPath);
-      console.log("The final path" + finalPath);
 
       const buffer = Buffer.from(await image.arrayBuffer());
       fs.writeFileSync(finalPath, buffer);
       imagePath = tempPath;
     }
 
-    const query = "INSERT INTO entries (title, description, tags, type, imgSrc, date, author, properties) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-    const values = [
+    const entryData = {
       title,
       description,
-      tags || "[]",
+      tags: tags || "[]",
       type,
-      imagePath,
-      new Date().toISOString(),
-      user.username,
-      properties || "{}",
-    ];
+      imgSrc: imagePath,
+      date: new Date().toISOString(),
+      author: user.username,
+      properties: properties || "{}"
+    };
 
-    const result = await db.run(query, values);
+    console.log("Attempting to insert entry:", entryData);
+
+    const { data, error } = await supabase
+      .from('entries')
+      .insert(entryData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Supabase error details:", error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,
-      articleId: result.lastID
+      articleId: data.id
     });
   } catch (error) {
-    console.error("Error saving entry:", error);
+    console.error("Error in POST /api/entries:", error);
     return NextResponse.json(
-      { error: "Failed to save entry" },
+      { error: error instanceof Error ? error.message : "Failed to create entry" },
       { status: 500 }
     );
   }
