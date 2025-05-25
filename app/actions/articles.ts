@@ -83,9 +83,14 @@ export async function createArticle(formData: FormData) {
     if (imgFile) {
       const fileExt = imgFile.name.split('.').pop();
       const fileName = `${Math.random()}.${fileExt}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
+
+      // Convert File to ArrayBuffer
+      const arrayBuffer = await imgFile.arrayBuffer();
+      const { error: uploadError } = await supabase.storage
         .from(STORAGE_CONFIG.BUCKET_NAME)
-        .upload(fileName, imgFile);
+        .upload(fileName, arrayBuffer, {
+          contentType: imgFile.type
+        });
 
       if (uploadError) {
         throw new Error('Failed to upload image');
