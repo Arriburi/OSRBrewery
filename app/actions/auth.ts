@@ -58,7 +58,7 @@ export async function signup(state: FormState, formData: FormData) {
     }
 
     console.log('Signup successful for:', email);
-    redirect('/login')
+    return { redirect: '/login' }
   } catch (error: unknown) {
     console.log('Signup exception:', error);
     return {
@@ -111,7 +111,7 @@ export async function login(state: FormState, formData: FormData) {
       username: user.username,
     })
 
-    redirect('/')
+    return { redirect: '/' }
   } catch (error) {
     console.log('Login exception:', error);
     return {
@@ -123,5 +123,5 @@ export async function login(state: FormState, formData: FormData) {
 export async function logout() {
   console.log('Logout attempt');
   await deleteSession()
-  redirect('/login')
+  return { redirect: '/login' }
 }

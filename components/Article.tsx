@@ -6,6 +6,7 @@ import BookmarkButton from "./BookmarkButton";
 import { getUserSession } from "@/app/lib/session";
 import { SessionPayload } from "@/app/lib/definitions";
 import { supabase } from "@/app/lib/supabase";
+import { getImageSrc } from "@/app/lib/defaultImages";
 
 interface ArticleProps {
   id: number;
@@ -23,15 +24,13 @@ const fetchArticleById = async (id: number) => {
       return null;
     }
 
-    const imgSrc = entry.imgSrc ? `/upload/${entry.imgSrc}` : null;
-
     const article = {
       id: entry.id,
       title: entry.title,
       description: entry.description,
       tags: JSON.parse(entry.tags || "[]"),
       type: entry.type,
-      imgSrc: imgSrc,
+      imgSrc: getImageSrc(entry.imgSrc, entry.type),
       date: new Date(entry.date).toISOString(),
       author: entry.author,
       properties: entry.properties || "{}",
@@ -82,7 +81,7 @@ export default async function Article({ id }: ArticleProps) {
         <div>
           <div className="flex items-center gap-4">
             <h1 className="text-4xl pb-2 font-bold text-foreground break-words">{article.title}</h1>
-            {user && <BookmarkButton articleId={id} />}
+            {user && <BookmarkButton articleId={id} userId={user.id} />}
           </div>
           <div className="flex flex-wrap max-w-[450px]">
             {article.tags.map((tag: string) => (
@@ -97,7 +96,7 @@ export default async function Article({ id }: ArticleProps) {
           <p>Published on {formattedDate}</p>
         </div>
       </div>
-      {article.imgSrc && (
+      {article.imgSrc && !article.imgSrc.startsWith('/default/') && (
         <Image
           src={article.imgSrc}
           width={350}

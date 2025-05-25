@@ -1,22 +1,9 @@
-
-import { BaseArticle } from "@/types/data";
-
-
-const fetchAllArticles = async (): Promise<BaseArticle[]> => {
-  try {
-    const response = await fetch("http://localhost:3000/api/entries");
-    return response.json();
-  } catch (error) {
-    console.error("Error fetching articles:", error);
-    return [];
-  }
-};
-
-
+import { getAllArticles } from "@/app/actions/articles";
 
 export default async function Boxlist() {
-  const articles = await fetchAllArticles();
-  const recentArticles = articles.reverse().slice(0, 8);
+  const articles = await getAllArticles();
+  const recentArticles = articles.slice(0, 8);
+
   return (
     <div className="bg-primary rounded-md p-4 shadow-lg">
       <h2 className="text-xl font-bold text-foreground mb-4">Recent Posts</h2>

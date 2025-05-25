@@ -2,8 +2,9 @@
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { SpellKeys, MonsterKeys, MonsterKeysType, SpellKeysType, ArticleType, Properties } from '../types/data';
 import TagInput from "./TagInput";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { createArticle } from "@/app/actions/articles";
 
 type Inputs = {
   title: string;
@@ -14,7 +15,6 @@ type Inputs = {
   imgSrc?: FileList;
 };
 
-
 function getKeysByType(inputType: string): MonsterKeysType[] | SpellKeysType[] {
   if (inputType == "Spell") {
     return [...SpellKeys];
@@ -24,18 +24,21 @@ function getKeysByType(inputType: string): MonsterKeysType[] | SpellKeysType[] {
     return []
 }
 
-
 export default function ArticleForm() {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
   const {
     control,
     register,
     unregister,
     handleSubmit,
     watch,
-    setValue
+    setValue,
+    formState: { errors }
   } = useForm<Inputs>()
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    setError(null); // Clear any previous errors
     const formData = new FormData();
 
     if (data.properties !== undefined) {
@@ -57,32 +60,23 @@ export default function ArticleForm() {
     }
 
     try {
+      const result = await createArticle(formData);
 
-      // POST reqest
-      const response = await fetch("/api/entries", {
-        method: "POST",
-        body: formData,
-      });
-
-      const responseData = await response.json();
-
-      if (response.ok) {
-        console.log("Entry saved successfully:", responseData);
-        router.push('/');
-      } else {
-        console.error("Failed to save entry:", responseData.error);
-        alert('Failed to save entry');
+      if (!result.success) {
+        setError(result.error || 'Failed to save entry');
+        return;
       }
+
+      console.log("Entry saved successfully:", result);
+      router.push('/');
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert('Error submitting form');
-
+      setError('Error submitting form');
     }
   };
 
   const inputType = watch("type");
   const typeKeys = getKeysByType(inputType)
-
 
   useEffect(() => {
     unregister("properties");
@@ -91,6 +85,11 @@ export default function ArticleForm() {
 
   return (
     <div className="container mx-auto px-8">
+      {error && (
+        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         {/*TYPE ARTICLE*/}
         <label className="block text-sm font-medium mb-1">Type of Article</label>
@@ -116,19 +115,28 @@ export default function ArticleForm() {
         </div>
         {/* TITLE */}
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Title</label>
-          <input placeholder="Insert title" className="w-full px-3 py-2 bg-primary text-foreground rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            {...register("title")} />
+          <label className="block text-sm font-medium mb-1">Title *</label>
+          <input
+            placeholder="Insert title"
+            className={`w-full px-3 py-2 bg-primary text-foreground rounded-md border ${errors.title ? 'border-red-500' : 'border-gray-600'} focus:ring-2 focus:ring-blue-500 focus:outline-none`}
+            {...register("title", { required: "Title is required" })}
+          />
+          {errors.title && (
+            <span className="text-red-500 text-sm mt-1">{errors.title.message}</span>
+          )}
         </div>
         {/* TEXT/DESCRIPTION */}
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Description</label>
+          <label className="block text-sm font-medium mb-1">Description *</label>
           <textarea
             placeholder="Insert description"
             rows={6}
-            className="w-full px-3 py-2 bg-primary text-foreground rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none whitespace-pre-wrap"
-            {...register("description")}
+            className={`w-full px-3 py-2 bg-primary text-foreground rounded-md border ${errors.description ? 'border-red-500' : 'border-gray-600'} focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none whitespace-pre-wrap`}
+            {...register("description", { required: "Description is required" })}
           />
+          {errors.description && (
+            <span className="text-red-500 text-sm mt-1">{errors.description.message}</span>
+          )}
         </div>
         {/* UPLOAD INPUT */}
         <div className="mb-4">
@@ -155,6 +163,6 @@ export default function ArticleForm() {
           </button>
         </div>
       </form>
-    </div >
+    </div>
   )
 }

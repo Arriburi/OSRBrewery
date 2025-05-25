@@ -3,9 +3,18 @@
 import { login } from '@/app/actions/auth'
 import { useActionState } from 'react'
 import Form from 'next/form'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function LoginForm() {
+  const router = useRouter()
   const [state, action, pending] = useActionState(login, undefined)
+
+  useEffect(() => {
+    if (state?.redirect) {
+      router.push(state.redirect)
+    }
+  }, [state, router])
 
   return (
     <>
@@ -49,6 +58,12 @@ export default function LoginForm() {
               <span className="text-red-500 text-sm">{state.errors.password}</span>
             )}
           </div>
+
+          {state?.message && (
+            <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+              {state.message}
+            </div>
+          )}
 
           <button
             disabled={pending}

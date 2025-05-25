@@ -2,26 +2,22 @@
 
 import { BsBookmark, BsBookmarkStar } from "react-icons/bs";
 import { useState, useEffect } from "react";
-import { BaseArticle } from "@/types/data";
+import { addBookmark, removeBookmark, isBookmarked as checkIsBookmarked } from "@/app/actions/bookmarks";
 
 interface BookmarkButtonProps {
   articleId: number;
+  userId: number;
 }
 
-export default function BookmarkButton({ articleId }: BookmarkButtonProps) {
+export default function BookmarkButton({ articleId, userId }: BookmarkButtonProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkBookmark = async () => {
       try {
-        const response = await fetch(`/api/bookmarks`);
-        const data = await response.json();
-        console.log('Bookmarks data:', data);
-        // Check if the current article is in the bookmarks list
-        const isBookmarked = data.some((bookmark: BaseArticle) => Number(bookmark.id) === Number(articleId));
-        console.log('Is bookmarked:', isBookmarked, 'for article:', articleId);
-        setIsBookmarked(isBookmarked);
+        const bookmarked = await checkIsBookmarked(userId, articleId);
+        setIsBookmarked(bookmarked);
       } catch (error) {
         console.error('Error checking bookmark:', error);
       } finally {
@@ -30,28 +26,15 @@ export default function BookmarkButton({ articleId }: BookmarkButtonProps) {
     };
 
     checkBookmark();
-  }, [articleId]);
+  }, [articleId, userId]);
 
   const toggleBookmark = async () => {
     try {
       if (isBookmarked) {
-        await fetch('/api/bookmarks', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ entryId: articleId }),
-        });
+        await removeBookmark(userId, articleId);
       } else {
-        await fetch('/api/bookmarks', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ entryId: articleId }),
-        });
+        await addBookmark(userId, articleId);
       }
-      console.log('Toggling bookmark state from:', isBookmarked, 'to:', !isBookmarked);
       setIsBookmarked(!isBookmarked);
     } catch (error) {
       console.error('Error toggling bookmark:', error);
@@ -62,7 +45,6 @@ export default function BookmarkButton({ articleId }: BookmarkButtonProps) {
     return <div className="w-6 h-6" />; // Placeholder while loading
   }
 
-  console.log('Current bookmark state:', isBookmarked);
   return (
     <button
       onClick={toggleBookmark}

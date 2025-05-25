@@ -1,12 +1,17 @@
 import UserProfile from "@/components/UserProfile";
 import { notFound } from "next/navigation";
+import { supabase } from "@/app/lib/supabase";
 
 export default async function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const username = (await params).username;
 
-  const response = await fetch(`http://localhost:3000/api/users/${username}`);
-  const user = await response.json();
-  if (!response.ok) {
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('id, username, email, created_at')
+    .eq('username', username)
+    .single();
+
+  if (error || !user) {
     notFound();
   }
 
