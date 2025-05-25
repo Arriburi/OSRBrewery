@@ -4,7 +4,7 @@ import { SignupFormSchema, LoginFormSchema, FormState } from '@/app/lib/definiti
 import bcrypt from 'bcrypt';
 import { createSession, deleteSession } from '@/app/lib/session'
 import { redirect } from 'next/navigation'
-import { supabase } from '../lib/supabase'
+import { supabaseAdmin } from '../lib/supabase'
 
 export async function signup(state: FormState, formData: FormData) {
   console.log('Signup attempt:', formData.get('email'));
@@ -26,7 +26,7 @@ export async function signup(state: FormState, formData: FormData) {
     const { username, email, password } = validatedFields.data
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('users')
       .insert({
         username,
@@ -84,7 +84,7 @@ export async function login(state: FormState, formData: FormData) {
   try {
     const { email, password } = validatedFields.data
 
-    const { data: user, error } = await supabase
+    const { data: user, error } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('email', email)
