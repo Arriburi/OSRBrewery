@@ -1,6 +1,6 @@
 'use server'
 
-import { supabase } from '../lib/supabase';
+import { supabaseAdmin } from '../lib/supabase';
 import { revalidatePath } from 'next/cache';
 
 export type Comment = {
@@ -13,7 +13,7 @@ export type Comment = {
 }
 
 export async function getComments(articleId: number): Promise<Comment[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('comments')
     .select(`
       id,
@@ -40,7 +40,7 @@ export async function getComments(articleId: number): Promise<Comment[]> {
 }
 
 export async function addComment(articleId: number, userId: number, content: string): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('comments')
     .insert({
       article_id: articleId,

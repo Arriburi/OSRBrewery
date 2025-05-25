@@ -1,6 +1,6 @@
 import { ArticleType } from "@/types/data";
-import { supabase } from "./supabase";
 import { STORAGE_CONFIG } from "./storage";
+import { supabaseAdmin } from "./supabase";
 
 export const default_images: Record<ArticleType, string> = {
   "Default": "/default/default-article.svg",
@@ -20,7 +20,7 @@ export function getImageSrc(imgSrc: string | null, type: ArticleType): string | 
   if (imgSrc.startsWith('/default/')) return imgSrc;
 
   // For Supabase storage images, construct the full URL
-  const { data: { publicUrl } } = supabase.storage
+  const { data: { publicUrl } } = supabaseAdmin.storage
     .from(STORAGE_CONFIG.BUCKET_NAME)
     .getPublicUrl(imgSrc);
   console.log("BUCKET_NAME", STORAGE_CONFIG.BUCKET_NAME);

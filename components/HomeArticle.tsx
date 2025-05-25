@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getImageSrc } from "@/app/lib/defaultImages";
 import { ArticleType } from "@/types/data";
-import { supabase } from "@/app/lib/supabase";
+import { supabaseAdmin } from "@/app/lib/supabase";
 
 interface HomeArticleProps {
   article: BaseArticle;
@@ -11,7 +11,7 @@ interface HomeArticleProps {
 
 async function getArticles(): Promise<BaseArticle[]> {
   try {
-    const { data: entries, error } = await supabase
+    const { data: entries, error } = await supabaseAdmin
       .from('entries')
       .select('*')
       .order('date', { ascending: false });

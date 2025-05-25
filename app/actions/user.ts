@@ -1,8 +1,8 @@
 import { User } from "../lib/definitions";
-import { supabase } from "../lib/supabase";
+import { supabaseAdmin } from "../lib/supabase";
 
 export const getUser = async (userId: number): Promise<User | null> => {
-  const { data: userdb, error } = await supabase
+  const { data: userdb, error } = await supabaseAdmin
     .from('users')
     .select('*')
     .eq('id', userId)

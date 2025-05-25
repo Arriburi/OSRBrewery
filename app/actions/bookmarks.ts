@@ -2,7 +2,7 @@
 
 import { getImageSrc } from '../lib/defaultImages';
 import { Article } from './articles';
-import { supabase } from '../lib/supabase';
+import { supabaseAdmin } from '../lib/supabase';
 import { ArticleType } from '@/types/data';
 import { revalidatePath } from 'next/cache';
 
@@ -22,7 +22,7 @@ interface BookmarkEntry {
 }
 
 export async function getBookmarks(userId: number): Promise<Article[]> {
-  const { data: bookmarks, error } = await supabase
+  const { data: bookmarks, error } = await supabaseAdmin
     .from('bookmarks')
     .select(`
       entry_id,
@@ -59,7 +59,7 @@ export async function getBookmarks(userId: number): Promise<Article[]> {
 }
 
 export async function addBookmark(userId: number, entryId: number): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('bookmarks')
     .insert({
       user_id: userId,
@@ -70,7 +70,7 @@ export async function addBookmark(userId: number, entryId: number): Promise<bool
 }
 
 export async function removeBookmark(userId: number, entryId: number): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('bookmarks')
     .delete()
     .eq('user_id', userId)
@@ -80,7 +80,7 @@ export async function removeBookmark(userId: number, entryId: number): Promise<b
 }
 
 export async function isBookmarked(userId: number, entryId: number): Promise<boolean> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('bookmarks')
     .select('*')
     .eq('user_id', userId)

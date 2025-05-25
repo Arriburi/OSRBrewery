@@ -1,6 +1,6 @@
 'use server'
 
-import { supabase } from '../lib/supabase';
+import { supabaseAdmin } from '../lib/supabase';
 import { getUser } from './user';
 import { getImageSrc } from '../lib/defaultImages';
 import { ArticleType, Properties, BaseArticle } from '@/types/data';
@@ -31,7 +31,7 @@ export async function getArticlesForUser(userid: number | null): Promise<Article
       return [];
     }
 
-    const { data: articles, error } = await supabase
+    const { data: articles, error } = await supabaseAdmin
       .from('entries')
       .select('*')
       .eq('author', user.username)
@@ -86,7 +86,7 @@ export async function createArticle(formData: FormData) {
 
       // Convert File to ArrayBuffer
       const arrayBuffer = await imgFile.arrayBuffer();
-      const { error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabaseAdmin.storage
         .from(STORAGE_CONFIG.BUCKET_NAME)
         .upload(fileName, arrayBuffer, {
           contentType: imgFile.type
@@ -96,14 +96,14 @@ export async function createArticle(formData: FormData) {
         throw new Error('Failed to upload image');
       }
 
-      const { data: { publicUrl } } = supabase.storage
+      const { data: { publicUrl } } = supabaseAdmin.storage
         .from(STORAGE_CONFIG.BUCKET_NAME)
         .getPublicUrl(fileName);
 
       imgSrc = fileName; // Store just the filename, not the full URL
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('entries')
       .insert({
         title,
@@ -128,7 +128,7 @@ export async function createArticle(formData: FormData) {
 
 export async function getAllArticles(): Promise<BaseArticle[]> {
   try {
-    const { data: entries, error } = await supabase
+    const { data: entries, error } = await supabaseAdmin
       .from('entries')
       .select('*')
       .order('date', { ascending: false });

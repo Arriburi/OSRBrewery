@@ -1,11 +1,11 @@
 'use server'
 
-import { supabase } from "@/app/lib/supabase";
+import { supabaseAdmin } from "@/app/lib/supabase";
 import { getImageSrc } from "@/app/lib/defaultImages";
 import { getUser } from "./user";
 
 export async function getArticleById(id: number) {
-  const { data: entry, error } = await supabase
+  const { data: entry, error } = await supabaseAdmin
     .from('entries')
     .select('*')
     .eq('id', id)
@@ -31,7 +31,7 @@ export async function getArticleById(id: number) {
 export async function deleteArticle(articleId: number, userId: number) {
   try {
     // First get the article to check ownership
-    const { data: article, error: fetchError } = await supabase
+    const { data: article, error: fetchError } = await supabaseAdmin
       .from('entries')
       .select('author')
       .eq('id', articleId)
@@ -53,7 +53,7 @@ export async function deleteArticle(articleId: number, userId: number) {
     }
 
     // Delete the article
-    const { error: deleteError } = await supabase
+    const { error: deleteError } = await supabaseAdmin
       .from('entries')
       .delete()
       .eq('id', articleId);
