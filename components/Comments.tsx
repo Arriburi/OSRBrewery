@@ -1,19 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/app/lib/supabase';
 import { User } from '@/app/lib/definitions';
 import { formatDistanceToNow } from 'date-fns';
 import { useForm } from 'react-hook-form';
-
-type Comment = {
-  id: number;
-  content: string;
-  created_at: string;
-  user: {
-    username: string;
-  };
-}
+import { getComments, addComment, type Comment } from '@/app/actions/comments';
 
 type CommentsProps = {
   articleId: number;
@@ -29,25 +20,8 @@ export default function Comments({ articleId, user }: CommentsProps) {
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<CommentFormData>();
 
   const fetchComments = async () => {
-    const { data, error } = await supabase
-      .from('comments')
-      .select('id, content, created_at, user_id, users!user_id(username)')
-      .eq('article_id', articleId)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching comments:', error);
-      return;
-    }
-
-    setComments(data.map(comment => ({
-      id: comment.id,
-      content: comment.content,
-      created_at: comment.created_at,
-      user: {
-        username: user?.username || 'Unknown User'
-      }
-    })));
+    const fetchedComments = await getComments(articleId);
+    setComments(fetchedComments);
   };
 
   useEffect(() => {
@@ -57,15 +31,8 @@ export default function Comments({ articleId, user }: CommentsProps) {
   const onSubmit = async ({ content }: CommentFormData) => {
     if (!user) return;
 
-    const { error } = await supabase
-      .from('comments')
-      .insert({
-        article_id: articleId,
-        user_id: user.id,
-        content: content.trim()
-      });
-
-    if (!error) {
+    const success = await addComment(articleId, user.id, content);
+    if (success) {
       reset();
       await fetchComments();
     }

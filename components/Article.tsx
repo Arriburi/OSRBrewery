@@ -51,6 +51,7 @@ export default async function Article({ id }: ArticleProps) {
               <div className="flex items-center gap-4">
                 <h1 className="text-4xl pb-2 font-bold text-foreground break-words">{article.title}</h1>
                 {user && <BookmarkButton articleId={id} userId={user.id} />}
+
                 {user && article.author === user.username && <DeleteButton articleId={id} userId={user.id} />}
               </div>
               <div className="flex flex-wrap max-w-[450px]">

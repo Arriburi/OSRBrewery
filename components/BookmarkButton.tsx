@@ -2,7 +2,7 @@
 
 import { BsBookmark, BsBookmarkStar } from "react-icons/bs";
 import { useState, useEffect } from "react";
-import { addBookmark, removeBookmark, isBookmarked as checkIsBookmarked } from "@/app/actions/bookmarks";
+import { isBookmarked as checkIsBookmarked, toggleBookmark } from "@/app/actions/bookmarks";
 
 interface BookmarkButtonProps {
   articleId: number;
@@ -28,14 +28,12 @@ export default function BookmarkButton({ articleId, userId }: BookmarkButtonProp
     checkBookmark();
   }, [articleId, userId]);
 
-  const toggleBookmark = async () => {
+  const handleToggleBookmark = async () => {
     try {
-      if (isBookmarked) {
-        await removeBookmark(userId, articleId);
-      } else {
-        await addBookmark(userId, articleId);
+      const result = await toggleBookmark(userId, articleId);
+      if (result.success) {
+        setIsBookmarked(result.isBookmarked);
       }
-      setIsBookmarked(!isBookmarked);
     } catch (error) {
       console.error('Error toggling bookmark:', error);
     }
@@ -47,11 +45,11 @@ export default function BookmarkButton({ articleId, userId }: BookmarkButtonProp
 
   return (
     <button
-      onClick={toggleBookmark}
-      className="text-2xl"
+      onClick={handleToggleBookmark}
+      className="text-2xl text-muted-foreground hover:text-accent transition-colors"
       aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
     >
-      {isBookmarked ? <BsBookmarkStar className="text-accent" /> : <BsBookmark className="text-white" />}
+      {isBookmarked ? <BsBookmarkStar /> : <BsBookmark />}
     </button>
   );
 } 

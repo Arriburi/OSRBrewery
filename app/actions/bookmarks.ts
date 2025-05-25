@@ -1,7 +1,10 @@
+'use server'
+
 import { getImageSrc } from '../lib/defaultImages';
 import { Article } from './articles';
 import { supabase } from '../lib/supabase';
 import { ArticleType } from '@/types/data';
+import { revalidatePath } from 'next/cache';
 
 interface BookmarkEntry {
   entry_id: number;
@@ -89,6 +92,26 @@ export async function isBookmarked(userId: number, entryId: number): Promise<boo
   }
 
   return !!data;
+}
+
+export async function toggleBookmark(userId: number, entryId: number): Promise<{ success: boolean; isBookmarked: boolean }> {
+  const isCurrentlyBookmarked = await isBookmarked(userId, entryId);
+
+  if (isCurrentlyBookmarked) {
+    const success = await removeBookmark(userId, entryId);
+    if (success) {
+      revalidatePath('/profile/*');
+      revalidatePath('/articles/*');
+    }
+    return { success, isBookmarked: false };
+  } else {
+    const success = await addBookmark(userId, entryId);
+    if (success) {
+      revalidatePath('/profile/*');
+      revalidatePath('/articles/*');
+    }
+    return { success, isBookmarked: true };
+  }
 }
 
 

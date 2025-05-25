@@ -44,7 +44,7 @@ export default async function ArticleDisplay({ params }: { params: Promise<{ art
         <div className="rounded-md shadow-md bg-primary p-[20px]">
           <div className="container mx-auto px-4">
             <Suspense fallback={<div>Loading...</div>}>
-              <Comments articleId={id} user={user} />
+              {<Comments articleId={id} user={user} />}
             </Suspense>
           </div>
         </div>
