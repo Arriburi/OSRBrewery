@@ -10,11 +10,9 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold mb-6">About OSRB</h1>
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
+            <h2 className="text-2xl font-semibold mb-4">Welcome to OSRB</h2>
             <p className="text-lg mb-4">
-              OSRB is dedicated to preserving and celebrating the rich tradition of tabletop roleplaying games.
-              We provide a platform for creators to share their homebrew content and for players to discover
-              new adventures, spells, monsters, and more.
+              OSRB is a platform dedicated to the Old School Renaissance (OSR) community, where tabletop RPG enthusiasts can create, share, and discover homebrew content. Whether you're looking for new adventures, spells, monsters, or want to share your own creations, OSRB is your hub for all things OSR.
             </p>
           </section>
 
@@ -28,7 +26,7 @@ export default function AboutPage() {
             </ul>
           </section>
 
-          <section>
+          <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">Join the Community</h2>
             <p className="text-lg mb-4">
               Share your homebrew content and discover new ideas here on OSRB. Together we are preserving

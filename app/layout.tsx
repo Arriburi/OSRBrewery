@@ -66,7 +66,14 @@ export default async function RootLayout({
         <footer className="text-foreground flex justify-center my-3 space-x-2 text-sm">
           <div>Arrighetti Luca • </div>
           <div>2024 • </div>
-          <div>OSRB</div>
+          <Link
+            href="https://github.com/Arriburi/OSRBrewery"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground hover:underline"
+          >
+            OSRB
+          </Link>
         </footer>
       </body>
     </html>
