@@ -49,3 +49,9 @@ export type User = {
   created_at: string
 }
 
+export type Comment = {
+  id: number
+  content: string
+  created_at: string
+  username:  string
+}

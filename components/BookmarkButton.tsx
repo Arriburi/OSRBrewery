@@ -11,7 +11,6 @@ interface BookmarkButtonProps {
 
 export default function BookmarkButton({ articleId, userId }: BookmarkButtonProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkBookmark = async () => {
@@ -20,8 +19,6 @@ export default function BookmarkButton({ articleId, userId }: BookmarkButtonProp
         setIsBookmarked(bookmarked);
       } catch (error) {
         console.error('Error checking bookmark:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -38,10 +35,6 @@ export default function BookmarkButton({ articleId, userId }: BookmarkButtonProp
       console.error('Error toggling bookmark:', error);
     }
   };
-
-  if (isLoading) {
-    return <div className="w-6 h-6" />; // Placeholder while loading
-  }
 
   return (
     <button

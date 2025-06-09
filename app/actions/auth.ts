@@ -3,7 +3,6 @@
 import { SignupFormSchema, LoginFormSchema, FormState } from '@/app/lib/definitions'
 import bcrypt from 'bcrypt';
 import { createSession, deleteSession } from '@/app/lib/session'
-import { redirect } from 'next/navigation'
 import { supabaseAdmin } from '../lib/supabase'
 
 export async function signup(state: FormState, formData: FormData) {
